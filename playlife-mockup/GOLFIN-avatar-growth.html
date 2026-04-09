@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#080808;display:flex;justify-content:center;gap:16px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:375px;height:812px;background:#111;border-radius:40px;border:3px solid #222;overflow:hidden;position:relative;flex-shrink:0}
+.phone-label{color:#666;font-size:11px;text-align:center;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:80px}
+.screen::-webkit-scrollbar{display:none}
+:root{--bg:#111;--card:#1a1a1a;--g:#2DB87A;--gs:#1a3d2e;--gd:#D4A853;--gds:rgba(212,168,83,.12);--pk:#E86B8A;--pks:rgba(232,107,138,.12);--bl:#5B9EF4;--bls:rgba(91,158,244,.12);--pp:#9B7AFF;--pps:rgba(155,122,255,.12);--t:#f0f0f0;--t2:#999;--t3:#555;--bd:#2a2a2a}
+.lang-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#222;border-radius:20px;overflow:hidden;border:1px solid #333}
+.lang-btn{padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;color:#999;border:none;background:transparent;transition:all .2s}
+.lang-btn.active{background:var(--g);color:#fff}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:52px 20px 12px}
+.hdr-title{font-size:17px;font-weight:600;color:var(--t)}
+.hdr-back{font-size:14px;color:var(--t2);cursor:pointer}
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(17,17,17,.95);backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 0}
+.ti{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--t3)}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:8px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g)}
+.sh{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 6px}
+.stt{font-size:14px;font-weight:600;color:var(--t)}
+.stl{font-size:11px;color:var(--g);cursor:pointer}
+
+/* Avatar hero */
+.av-hero{margin:6px 16px;background:linear-gradient(180deg,#0a1f15 0%,#111 100%);border-radius:20px;padding:24px 20px;text-align:center;position:relative;overflow:hidden}
+.av-hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(45,184,122,.1) 0%,transparent 70%)}
+.av-hero::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L20 40M0 20L40 20' stroke='%23ffffff' stroke-opacity='0.02' stroke-width='0.5'/%3E%3C/svg%3E")}
+
+/* Avatar body */
+.av-body{position:relative;width:120px;height:160px;margin:0 auto 12px;z-index:1}
+.av-head{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--g),#1a8a55);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;margin:0 auto;position:relative;z-index:2}
+.av-head-ring{position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--gd);opacity:.6;animation:pulse-ring 3s ease-in-out infinite}
+@keyframes pulse-ring{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.7;transform:scale(1.05)}}
+.av-torso{width:64px;height:50px;background:linear-gradient(180deg,#1a4a32,#0f3422);border-radius:8px 8px 4px 4px;margin:-8px auto 0;position:relative;z-index:1}
+.av-torso-stripe{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:20px;height:3px;background:var(--g);border-radius:2px;opacity:.4}
+.av-legs{display:flex;justify-content:center;gap:6px;margin-top:-2px}
+.av-leg{width:22px;height:40px;background:linear-gradient(180deg,#1a2a1a,#0f1f0f);border-radius:3px 3px 6px 6px}
+.av-shoes{display:flex;justify-content:center;gap:10px;margin-top:-2px}
+.av-shoe{width:26px;height:12px;background:#222;border-radius:6px 6px 4px 4px}
+.av-club{position:absolute;right:8px;top:30px;width:4px;height:70px;background:linear-gradient(180deg,#888,#555);border-radius:2px;transform:rotate(-15deg)}
+.av-club-head{position:absolute;bottom:-4px;left:-6px;width:16px;height:10px;background:#666;border-radius:2px}
+
+/* Equipped items indicators */
+.av-equip{display:flex;justify-content:center;gap:6px;margin-top:8px;position:relative;z-index:1}
+.av-equip-item{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;border:1.5px solid}
+.av-equip-item.basic{background:var(--card);border-color:var(--bd)}
+.av-equip-item.premium{background:var(--pks);border-color:rgba(232,107,138,.3)}
+.av-equip-item.empty{background:#1a1a1a;border-color:#2a2a2a;border-style:dashed;font-size:10px;color:var(--t3)}
+
+/* Level display */
+.av-lv{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--gd),#b48833);padding:4px 16px;border-radius:20px;margin-top:12px;position:relative;z-index:1}
+.av-lv-num{font-size:16px;font-weight:700;color:#fff}
+.av-lv-title{font-size:11px;color:rgba(255,255,255,.7)}
+
+/* Next level progress */
+.next-lv{margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px 16px;position:relative;overflow:hidden}
+.next-lv::before{content:'';position:absolute;top:0;left:0;bottom:0;width:65%;background:linear-gradient(90deg,rgba(45,184,122,.04),transparent)}
+.next-lv-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;position:relative}
+.next-lv-label{font-size:13px;font-weight:600;color:var(--t)}
+.next-lv-target{font-size:12px;color:var(--gd);font-weight:600}
+.next-lv-bar{height:12px;background:#2a2a2a;border-radius:6px;overflow:hidden;position:relative}
+.next-lv-fill{height:100%;background:linear-gradient(90deg,var(--g),#5DCAA5);border-radius:6px;position:relative}
+.next-lv-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:20px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2));animation:shimmer 2s ease-in-out infinite}
+@keyframes shimmer{0%,100%{opacity:0}50%{opacity:1}}
+.next-lv-info{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;position:relative}
+.next-lv-xp{color:var(--t3)}
+.next-lv-action{color:var(--g);font-weight:600}
+
+/* Evolution timeline */
+.evo{margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px 16px}
+.evo-title{font-size:13px;font-weight:600;color:var(--t);margin-bottom:12px}
+.evo-timeline{display:flex;align-items:center;position:relative;padding:0 4px}
+.evo-stage{text-align:center;flex:1;position:relative;z-index:1}
+.evo-circle{width:36px;height:36px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;position:relative}
+.evo-circle.reached{border:2px solid var(--g)}
+.evo-circle.current{border:2px solid var(--gd);box-shadow:0 0 12px rgba(212,168,83,.3)}
+.evo-circle.locked{border:2px solid #333;opacity:.4}
+.evo-name{font-size:8px;color:var(--t3);line-height:1.2}
+.evo-name.current{color:var(--gd);font-weight:600}
+.evo-line{position:absolute;top:18px;left:0;right:0;height:2px;background:#2a2a2a;z-index:0}
+.evo-line-fill{height:100%;background:var(--g);width:55%}
+
+/* Unlock preview */
+.unlock{margin:8px 16px;background:linear-gradient(135deg,var(--gs),#0f2a1c);border:1px solid rgba(45,184,122,.15);border-radius:16px;padding:14px 16px}
+.unlock-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.unlock-icon{font-size:18px}
+.unlock-title{font-size:13px;font-weight:600;color:var(--g)}
+.unlock-items{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.unlock-items::-webkit-scrollbar{display:none}
+.unlock-item{flex-shrink:0;width:90px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 6px;text-align:center}
+.unlock-item-icon{font-size:22px;margin-bottom:4px}
+.unlock-item-name{font-size:9px;color:var(--t2)}
+.unlock-item-lv{font-size:8px;color:var(--g);font-weight:600;margin-top:2px}
+
+/* Stats */
+.stat-card{margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px 16px}
+.stat-title{font-size:13px;font-weight:600;color:var(--t);margin-bottom:10px}
+.stat-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.stat-icon{font-size:14px;width:20px;text-align:center}
+.stat-name{font-size:12px;color:var(--t2);width:72px}
+.stat-track{flex:1;height:10px;background:#2a2a2a;border-radius:5px;overflow:hidden;position:relative}
+.stat-fill{height:100%;border-radius:5px}
+.stat-fill.power{background:linear-gradient(90deg,#E24B4A,#F09595)}
+.stat-fill.tech{background:linear-gradient(90deg,#5B9EF4,#85B7EB)}
+.stat-fill.mental{background:linear-gradient(90deg,#9B7AFF,#CECBF6)}
+.stat-val{font-size:13px;font-weight:700;color:var(--t);width:28px;text-align:right}
+.stat-change{font-size:9px;color:var(--g);margin-left:2px}
+
+/* Rental demand */
+.rental{margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px 16px}
+.rental-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.rental-title{font-size:13px;font-weight:600;color:var(--t)}
+.rental-status{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px}
+.rental-status.high{background:var(--gs);color:var(--g)}
+.rental-status.medium{background:var(--gds);color:var(--gd)}
+.rental-info{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.rental-stat{text-align:center}
+.rental-stat-num{font-size:16px;font-weight:700;color:var(--t)}
+.rental-stat-label{font-size:9px;color:var(--t3);margin-top:1px}
+.rental-msg{font-size:11px;color:var(--gd);background:var(--gds);border-radius:8px;padding:8px 10px;text-align:center}
+
+/* Comparison */
+.compare{margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px 16px}
+.compare-title{font-size:13px;font-weight:600;color:var(--t);margin-bottom:10px}
+.compare-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.compare-rank{font-size:12px;font-weight:700;color:var(--t3);width:18px;text-align:center}
+.compare-rank.you{color:var(--g)}
+.compare-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.compare-name{font-size:12px;font-weight:500;color:var(--t);flex:1}
+.compare-name.you{color:var(--g)}
+.compare-lv{font-size:12px;font-weight:700;color:var(--gd)}
+.compare-bar-mini{width:60px;height:4px;background:#2a2a2a;border-radius:2px;overflow:hidden}
+.compare-bar-mini-fill{height:100%;background:var(--g);border-radius:2px}
+
+/* Quick actions */
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 16px}
+.quick-btn{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 12px;text-align:center;cursor:pointer;transition:border-color .2s}
+.quick-btn:hover{border-color:#444}
+.quick-btn-icon{font-size:20px;margin-bottom:4px}
+.quick-btn-title{font-size:12px;font-weight:600;color:var(--t)}
+.quick-btn-desc{font-size:10px;color:var(--t3);margin-top:2px}
+.quick-btn.highlight{border-color:rgba(45,184,122,.3);background:var(--gs)}
+.quick-btn.highlight .quick-btn-title{color:var(--g)}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+<button class="lang-btn active" onclick="setLang('ja')">JA</button>
+<button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- ========== AVATAR GROWTH (FUN VERSION) ========== -->
+<div>
+<div class="phone-label">Avatar (fun)</div>
+<div class="phone"><div class="screen">
+<div class="hdr">
+<div class="hdr-back"><span class="i18n" data-ja="&#8249; 戻る" data-en="&#8249; Back">&#8249; 戻る</span></div>
+<div class="hdr-title"><span class="i18n" data-ja="マイアバター" data-en="My avatar">マイアバター</span></div>
+<div class="stl"><span class="i18n" data-ja="着せ替え" data-en="Dress up">着せ替え</span></div>
+</div>
+
+<!-- Avatar hero with simple character -->
+<div class="av-hero">
+  <div class="av-body">
+    <div class="av-head">
+      <div class="av-head-ring"></div>
+      K
+    </div>
+    <div class="av-torso"><div class="av-torso-stripe"></div></div>
+    <div class="av-legs"><div class="av-leg"></div><div class="av-leg"></div></div>
+    <div class="av-shoes"><div class="av-shoe"></div><div class="av-shoe"></div></div>
+    <div class="av-club"><div class="av-club-head"></div></div>
+  </div>
+
+  <div class="av-equip">
+    <div class="av-equip-item basic" title="Cap">&#129506;</div>
+    <div class="av-equip-item basic" title="Polo">&#128085;</div>
+    <div class="av-equip-item premium" title="Shoes ★">&#128095;</div>
+    <div class="av-equip-item basic" title="Glove">&#129470;</div>
+    <div class="av-equip-item empty">+</div>
+  </div>
+
+  <div class="av-lv">
+    <div class="av-lv-num">Lv.12</div>
+    <div class="av-lv-title"><span class="i18n" data-ja="アマチュアゴルファー" data-en="Amateur golfer">アマチュアゴルファー</span></div>
+  </div>
+</div>
+
+<!-- Next level with shimmer -->
+<div class="next-lv">
+  <div class="next-lv-top">
+    <div class="next-lv-label">Lv.12 → Lv.13</div>
+    <div class="next-lv-target"><span class="i18n" data-ja="あと2ラウンド" data-en="2 rounds to go">あと2ラウンド</span></div>
+  </div>
+  <div class="next-lv-bar"><div class="next-lv-fill" style="width:65%"></div></div>
+  <div class="next-lv-info">
+    <div class="next-lv-xp">650 / 1,000 XP</div>
+    <div class="next-lv-action"><span class="i18n" data-ja="&#9971; ラウンドしてLv UP" data-en="&#9971; Play a round to level up">&#9971; ラウンドしてLv UP</span></div>
+  </div>
+</div>
+
+<!-- Evolution timeline -->
+<div class="evo">
+  <div class="evo-title"><span class="i18n" data-ja="アバター進化" data-en="Avatar evolution">アバター進化</span></div>
+  <div style="position:relative">
+    <div class="evo-line"><div class="evo-line-fill"></div></div>
+    <div class="evo-timeline">
+      <div class="evo-stage">
+        <div class="evo-circle reached" style="background:#2a5a3a;font-size:11px">&#9971;</div>
+        <div class="evo-name"><span class="i18n" data-ja="ビギナー" data-en="Beginner">ビギナー</span><br>Lv.1</div>
+      </div>
+      <div class="evo-stage">
+        <div class="evo-circle reached" style="background:#1e7a4a;font-size:12px">&#9971;</div>
+        <div class="evo-name"><span class="i18n" data-ja="ルーキー" data-en="Rookie">ルーキー</span><br>Lv.5</div>
+      </div>
+      <div class="evo-stage">
+        <div class="evo-circle current" style="background:linear-gradient(135deg,var(--g),#1a8a55);font-size:13px">&#9971;</div>
+        <div class="evo-name current"><span class="i18n" data-ja="アマチュア" data-en="Amateur">アマチュア</span><br>Lv.12</div>
+      </div>
+      <div class="evo-stage">
+        <div class="evo-circle locked" style="background:#1a1a1a;font-size:13px">&#128274;</div>
+        <div class="evo-name"><span class="i18n" data-ja="シングル" data-en="Single">シングル</span><br>Lv.20</div>
+      </div>
+      <div class="evo-stage">
+        <div class="evo-circle locked" style="background:#1a1a1a;font-size:13px">&#128081;</div>
+        <div class="evo-name"><span class="i18n" data-ja="プロ" data-en="Pro">プロ</span><br>Lv.50</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Unlock at next level -->
+<div class="unlock">
+  <div class="unlock-top">
+    <div class="unlock-icon">&#128275;</div>
+    <div class="unlock-title"><span class="i18n" data-ja="Lv.13で解放" data-en="Unlocks at Lv.13">Lv.13で解放</span></div>
+  </div>
+  <div class="unlock-items">
+    <div class="unlock-item">
+      <div class="unlock-item-icon">&#129506;</div>
+      <div class="unlock-item-name"><span class="i18n" data-ja="迷彩キャップ" data-en="Camo cap">迷彩キャップ</span></div>
+      <div class="unlock-item-lv">Lv.13</div>
+    </div>
+    <div class="unlock-item">
+      <div class="unlock-item-icon">&#127775;</div>
+      <div class="unlock-item-name"><span class="i18n" data-ja="ゴールドオーラ" data-en="Gold aura">ゴールドオーラ</span></div>
+      <div class="unlock-item-lv">Lv.15</div>
+    </div>
+    <div class="unlock-item">
+      <div class="unlock-item-icon">&#128293;</div>
+      <div class="unlock-item-name"><span class="i18n" data-ja="炎エフェクト" data-en="Fire effect">炎エフェクト</span></div>
+      <div class="unlock-item-lv">Lv.20</div>
+    </div>
+    <div class="unlock-item">
+      <div class="unlock-item-icon">&#128081;</div>
+      <div class="unlock-item-name"><span class="i18n" data-ja="王冠" data-en="Crown">王冠</span></div>
+      <div class="unlock-item-lv">Lv.30</div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats with growth indicator -->
+<div class="stat-card">
+  <div class="stat-title"><span class="i18n" data-ja="ステータス" data-en="Stats">ステータス</span></div>
+  <div class="stat-row">
+    <div class="stat-icon">&#128170;</div>
+    <div class="stat-name"><span class="i18n" data-ja="パワー" data-en="Power">パワー</span></div>
+    <div class="stat-track"><div class="stat-fill power" style="width:72%"></div></div>
+    <div class="stat-val">72</div>
+    <div class="stat-change">+3</div>
+  </div>
+  <div class="stat-row">
+    <div class="stat-icon">&#127919;</div>
+    <div class="stat-name"><span class="i18n" data-ja="テクニック" data-en="Technique">テクニック</span></div>
+    <div class="stat-track"><div class="stat-fill tech" style="width:58%"></div></div>
+    <div class="stat-val">58</div>
+    <div class="stat-change">+5</div>
+  </div>
+  <div class="stat-row">
+    <div class="stat-icon">&#129504;</div>
+    <div class="stat-name"><span class="i18n" data-ja="メンタル" data-en="Mental">メンタル</span></div>
+    <div class="stat-track"><div class="stat-fill mental" style="width:65%"></div></div>
+    <div class="stat-val">65</div>
+    <div class="stat-change">+2</div>
+  </div>
+  <div style="font-size:10px;color:var(--t3);margin-top:6px;text-align:right"><span class="i18n" data-ja="前回ラウンドからの変化" data-en="Change since last round">前回ラウンドからの変化</span></div>
+</div>
+
+<!-- Rental demand -->
+<div class="rental">
+  <div class="rental-header">
+    <div class="rental-title"><span class="i18n" data-ja="レンタル需要" data-en="Rental demand">レンタル需要</span></div>
+    <div class="rental-status high"><span class="i18n" data-ja="&#128200; 需要あり" data-en="&#128200; In demand">&#128200; 需要あり</span></div>
+  </div>
+  <div class="rental-info">
+    <div class="rental-stat"><div class="rental-stat-num" style="color:var(--gd)">8</div><div class="rental-stat-label"><span class="i18n" data-ja="レンタル回数" data-en="Times rented">レンタル回数</span></div></div>
+    <div class="rental-stat"><div class="rental-stat-num" style="color:var(--pk)">1,200</div><div class="rental-stat-label"><span class="i18n" data-ja="獲得Gift pts" data-en="Gift pts earned">獲得Gift pts</span></div></div>
+    <div class="rental-stat"><div class="rental-stat-num" style="color:var(--g)">3</div><div class="rental-stat-label"><span class="i18n" data-ja="待機中" data-en="Waiting">待機中</span></div></div>
+  </div>
+  <div class="rental-msg"><span class="i18n" data-ja="&#128161; Lv.15になると需要が2倍に！もっとラウンドしよう" data-en="&#128161; Demand doubles at Lv.15! Play more rounds">&#128161; Lv.15になると需要が2倍に！もっとラウンドしよう</span></div>
+</div>
+
+<!-- Comparison / Leaderboard -->
+<div class="compare">
+  <div class="compare-title"><span class="i18n" data-ja="アバターLvランキング" data-en="Avatar Lv ranking">アバターLvランキング</span></div>
+  <div class="compare-row">
+    <div class="compare-rank">1</div>
+    <div class="compare-av" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div>
+    <div class="compare-name">Yui</div>
+    <div class="compare-bar-mini"><div class="compare-bar-mini-fill" style="width:100%"></div></div>
+    <div class="compare-lv">Lv.28</div>
+  </div>
+  <div class="compare-row">
+    <div class="compare-rank">2</div>
+    <div class="compare-av" style="background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">T</div>
+    <div class="compare-name">Taro</div>
+    <div class="compare-bar-mini"><div class="compare-bar-mini-fill" style="width:71%"></div></div>
+    <div class="compare-lv">Lv.20</div>
+  </div>
+  <div class="compare-row" style="background:var(--gs);margin:0 -16px;padding:6px 16px;border-radius:8px">
+    <div class="compare-rank you">5</div>
+    <div class="compare-av" style="background:linear-gradient(135deg,var(--g),#1a8a55)">K</div>
+    <div class="compare-name you">Ken <span style="font-size:9px;font-weight:400;color:var(--g)"><span class="i18n" data-ja="（あなた）" data-en="(you)">(あなた)</span></span></div>
+    <div class="compare-bar-mini"><div class="compare-bar-mini-fill" style="width:43%"></div></div>
+    <div class="compare-lv">Lv.12</div>
+  </div>
+  <div class="compare-row">
+    <div class="compare-rank">6</div>
+    <div class="compare-av" style="background:linear-gradient(135deg,#D4A853,#b48833)">A</div>
+    <div class="compare-name">Aiko</div>
+    <div class="compare-bar-mini"><div class="compare-bar-mini-fill" style="width:36%"></div></div>
+    <div class="compare-lv">Lv.10</div>
+  </div>
+  <div style="text-align:center;margin-top:8px"><span style="font-size:11px;color:var(--g);cursor:pointer"><span class="i18n" data-ja="全ランキングを見る →" data-en="View full ranking →">全ランキングを見る →</span></span></div>
+</div>
+
+<!-- Quick actions -->
+<div class="quick">
+  <div class="quick-btn highlight">
+    <div class="quick-btn-icon">&#9971;</div>
+    <div class="quick-btn-title"><span class="i18n" data-ja="ラウンドする" data-en="Play a round">ラウンドする</span></div>
+    <div class="quick-btn-desc"><span class="i18n" data-ja="Lv UPの最速ルート" data-en="Fastest way to level up">Lv UPの最速ルート</span></div>
+  </div>
+  <div class="quick-btn">
+    <div class="quick-btn-icon">&#127873;</div>
+    <div class="quick-btn-title"><span class="i18n" data-ja="アイテムショップ" data-en="Item shop">アイテムショップ</span></div>
+    <div class="quick-btn-desc"><span class="i18n" data-ja="着せ替えで個性を出す" data-en="Customize your look">着せ替えで個性を出す</span></div>
+  </div>
+</div>
+
+</div>
+<div class="tb">
+<div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div>
+<div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div>
+<div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div>
+<div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div>
+<div class="tab on"><div class="ti">&#128100;</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+
+<script>
+function setLang(lang){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===lang.toUpperCase()));document.querySelectorAll('.i18n').forEach(el=>{const t=el.getAttribute('data-'+lang);if(t)el.innerHTML=t})}
+</script>
+</body>
+</html>

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#080808;display:flex;justify-content:center;gap:16px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:375px;height:812px;background:#111;border-radius:40px;border:3px solid #222;overflow:hidden;position:relative;flex-shrink:0}
+.phone-label{color:#666;font-size:11px;text-align:center;margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:80px}
+.screen::-webkit-scrollbar{display:none}
+:root{--bg:#111;--card:#1a1a1a;--g:#2DB87A;--gs:#1a3d2e;--gd:#D4A853;--gds:rgba(212,168,83,.12);--pk:#E86B8A;--pks:rgba(232,107,138,.12);--bl:#5B9EF4;--bls:rgba(91,158,244,.12);--pp:#9B7AFF;--pps:rgba(155,122,255,.12);--t:#f0f0f0;--t2:#999;--t3:#555;--bd:#2a2a2a}
+.lang-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#222;border-radius:20px;overflow:hidden;border:1px solid #333}
+.lang-btn{padding:6px 14px;font-size:11px;font-weight:600;cursor:pointer;color:#999;border:none;background:transparent;transition:all .2s}
+.lang-btn.active{background:var(--g);color:#fff}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:52px 20px 12px}
+.hdr-title{font-size:17px;font-weight:600;color:var(--t)}
+.hdr-back{font-size:14px;color:var(--t2);cursor:pointer}
+.btn{display:block;margin:12px 16px;padding:14px;border-radius:14px;text-align:center;font-size:14px;font-weight:600;cursor:pointer}
+.btn-primary{background:var(--g);color:#fff}
+.btn-secondary{background:var(--card);color:var(--t);border:1px solid var(--bd)}
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(17,17,17,.95);backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 0}
+.ti{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--t3)}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:8px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g)}
+.fp{display:flex;gap:6px;padding:6px 16px}
+.pill{font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--bd);color:var(--t2);cursor:pointer;background:var(--card)}
+.pill.on{background:var(--g);border-color:var(--g);color:#fff}
+.sh{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 6px}
+.stt{font-size:14px;font-weight:600;color:var(--t)}
+.stl{font-size:11px;color:var(--g);cursor:pointer}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+
+/* Gift History */
+.gh-item{margin:4px 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.gh-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.gh-icon.recv{background:var(--pks)}
+.gh-icon.sent{background:var(--bls)}
+.gh-info{flex:1}
+.gh-name{font-size:12px;font-weight:600;color:var(--t)}
+.gh-detail{font-size:10px;color:var(--t3);margin-top:1px}
+.gh-amount{font-size:14px;font-weight:700;flex-shrink:0}
+.gh-amount.recv{color:var(--pk)}
+.gh-amount.sent{color:var(--bl)}
+.gh-date{font-size:10px;color:var(--t3);flex-shrink:0;width:50px;text-align:right}
+
+/* Item Shop */
+.shop-cat{padding:8px 20px 4px;font-size:12px;font-weight:600;color:var(--t2)}
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px;margin-bottom:8px}
+.shop-item{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;transition:border-color .2s;position:relative}
+.shop-item:hover{border-color:#444}
+.shop-item.premium{border-color:rgba(232,107,138,.2)}
+.shop-item-icon{font-size:28px;margin-bottom:6px}
+.shop-item-name{font-size:10px;font-weight:600;color:var(--t);margin-bottom:4px}
+.shop-item-price{font-size:11px;font-weight:600;padding:2px 8px;border-radius:8px;display:inline-block}
+.shop-item-price.act{background:var(--gs);color:var(--g)}
+.shop-item-price.gift{background:var(--pks);color:var(--pk)}
+.shop-badge{position:absolute;top:4px;right:4px;font-size:7px;padding:1px 5px;border-radius:6px;font-weight:600;background:var(--pks);color:var(--pk)}
+
+/* Vote Detail */
+.vd-photo{margin:8px 16px;height:220px;background:linear-gradient(135deg,#1a3a2a,#0f2a1c);border-radius:16px;display:flex;align-items:flex-end;overflow:hidden;position:relative;background-size:cover;background-position:center}
+.vd-photo::after{content:'';position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+.vd-overlay{position:relative;z-index:1;padding:12px 16px;width:100%}
+.vd-user{display:flex;align-items:center;gap:8px}
+.vd-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;border:2px solid rgba(255,255,255,.2)}
+.vd-name{font-size:13px;font-weight:600;color:#fff}
+.vd-time{font-size:10px;color:rgba(255,255,255,.4)}
+.vd-q{font-size:18px;font-weight:700;color:var(--t);padding:12px 20px 8px;line-height:1.3}
+.vd-prize{font-size:12px;padding:4px 12px;border-radius:20px;font-weight:600;margin:0 20px 12px;display:inline-block}
+.vd-prize.gd{background:var(--gds);color:var(--gd)}
+.vd-bar{margin:4px 20px}
+.vd-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.vd-bar-label{font-size:13px;color:var(--t2);width:32px}
+.vd-bar-track{flex:1;height:8px;background:#2a2a2a;border-radius:4px;overflow:hidden}
+.vd-bar-fill{height:100%;border-radius:4px}
+.vd-bar-fill.y{background:var(--g)}.vd-bar-fill.n{background:var(--bl)}
+.vd-bar-pct{font-size:14px;font-weight:600;color:var(--t);width:38px;text-align:right}
+.vd-meta{display:flex;justify-content:space-between;align-items:center;padding:8px 20px}
+.vd-voters{font-size:12px;color:var(--t3)}
+.vd-vote-btns{display:flex;gap:8px}
+.vd-vote-btn{padding:8px 20px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer}
+.vd-vote-btn.yes{background:var(--gs);color:var(--g)}
+.vd-vote-btn.no{background:var(--bls);color:var(--bl)}
+.vd-comment{margin:4px 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;display:flex;align-items:flex-start;gap:8px}
+.vd-comment-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.vd-comment-body{flex:1}
+.vd-comment-name{font-size:11px;font-weight:600;color:var(--t)}
+.vd-comment-text{font-size:11px;color:var(--t2);margin-top:1px}
+.vd-comment-time{font-size:9px;color:var(--t3);margin-top:2px}
+
+/* Vote Result */
+.vr-hero{margin:8px 16px;background:linear-gradient(135deg,#1e4d35,#0f2a1c);border-radius:20px;padding:24px;text-align:center}
+.vr-label{font-size:12px;color:var(--g);font-weight:600;margin-bottom:8px}
+.vr-answer{font-size:32px;font-weight:700;color:#fff;margin-bottom:4px}
+.vr-q{font-size:13px;color:rgba(255,255,255,.5)}
+.vr-reward{margin:12px 16px;background:var(--gds);border:1px solid rgba(212,168,83,.2);border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.vr-reward-label{font-size:13px;color:var(--gd)}
+.vr-reward-num{font-size:20px;font-weight:700;color:var(--gd)}
+.vr-breakdown{margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px}
+.vr-breakdown-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:0.5px solid var(--bd)}
+.vr-breakdown-row:last-child{border-bottom:none}
+.vr-breakdown-label{color:var(--t2)}
+.vr-breakdown-val{font-weight:600;color:var(--t)}
+
+/* Other Profile */
+.op-hero{margin:8px 16px;background:linear-gradient(135deg,#3d1f2e,#2d1520,#1a0d14);border-radius:20px;padding:20px;text-align:center}
+.op-av{width:72px;height:72px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;border:3px solid rgba(255,255,255,.15)}
+.op-name{font-size:20px;font-weight:700;color:#fff}
+.op-handle{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px}
+.op-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+.op-stat{text-align:center}
+.op-stat-num{font-size:16px;font-weight:700;color:#fff}
+.op-stat-num.pk{color:var(--pk)}.op-stat-num.g{color:var(--g)}.op-stat-num.gd{color:var(--gd)}
+.op-stat-label{font-size:9px;color:rgba(255,255,255,.35);margin-top:1px}
+.op-actions{display:flex;gap:8px;margin:12px 16px}
+.op-action{flex:1;padding:10px;border-radius:12px;text-align:center;font-size:13px;font-weight:600;cursor:pointer}
+.op-action.follow{background:var(--g);color:#fff}
+.op-action.gift{background:var(--pks);color:var(--pk)}
+.op-round{margin:4px 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.op-round-info{flex:1}
+.op-round-course{font-size:12px;font-weight:600;color:var(--t)}
+.op-round-date{font-size:10px;color:var(--t3)}
+.op-round-score{font-size:20px;font-weight:700;color:var(--t)}
+
+/* Followers */
+.fl-tabs{display:flex;margin:0 16px;border-bottom:1px solid var(--bd)}
+.fl-tab{flex:1;text-align:center;padding:10px 0;font-size:13px;font-weight:500;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent}
+.fl-tab.on{color:var(--g);border-bottom-color:var(--g)}
+.fl-item{margin:4px 16px;display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--bd)}
+.fl-item:last-child{border-bottom:none}
+.fl-info{flex:1}
+.fl-name{font-size:13px;font-weight:600;color:var(--t)}
+.fl-sub{font-size:10px;color:var(--t3)}
+.fl-btn{font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;cursor:pointer}
+.fl-btn.following{background:var(--card);color:var(--t2);border:1px solid var(--bd)}
+.fl-btn.follow{background:var(--g);color:#fff}
+
+/* Ranking */
+.rk-filter{display:flex;gap:6px;padding:6px 16px;margin-bottom:4px}
+.rk-hero{margin:4px 16px;display:flex;align-items:flex-end;justify-content:center;gap:6px;padding:16px 0}
+.rk-podium{text-align:center;position:relative}
+.rk-podium-av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;margin:0 auto 4px;border:2px solid rgba(255,255,255,.2)}
+.rk-podium-name{font-size:10px;color:var(--t);font-weight:600}
+.rk-podium-score{font-size:12px;font-weight:700;margin-top:1px}
+.rk-podium-rank{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:14px}
+.rk-bar{width:100%;border-radius:6px 6px 0 0}
+.rk-list-item{margin:3px 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.rk-num{font-size:14px;font-weight:700;color:var(--t3);width:20px;text-align:center}
+.rk-info{flex:1}
+.rk-name{font-size:12px;font-weight:600;color:var(--t)}
+.rk-meta{font-size:10px;color:var(--t3)}
+.rk-score{font-size:16px;font-weight:700;color:var(--t)}
+.rk-you{background:var(--gs);border-color:rgba(45,184,122,.2)}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+<button class="lang-btn active" onclick="setLang('ja')">JA</button>
+<button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- ========== 20. GIFT HISTORY ========== -->
+<div>
+<div class="phone-label">20. Gift history</div>
+<div class="phone"><div class="screen">
+<div class="hdr">
+<div class="hdr-back"><span class="i18n" data-ja="&#8249; 戻る" data-en="&#8249; Back">&#8249; 戻る</span></div>
+<div class="hdr-title"><span class="i18n" data-ja="ギフト履歴" data-en="Gift history">ギフト履歴</span></div>
+<div></div>
+</div>
+
+<div class="fp">
+<div class="pill on"><span class="i18n" data-ja="すべて" data-en="All">すべて</span></div>
+<div class="pill"><span class="i18n" data-ja="受け取り" data-en="Received">受け取り</span></div>
+<div class="pill"><span class="i18n" data-ja="送付" data-en="Sent">送付</span></div>
+</div>
+
+<div style="padding:4px 20px;font-size:11px;color:var(--t3)"><span class="i18n" data-ja="今日" data-en="Today">今日</span></div>
+<div class="gh-item">
+<div class="gh-icon recv">&#127873;</div>
+<div class="gh-info"><div class="gh-name">Taro <span style="color:var(--t3);font-weight:400">→ <span class="i18n" data-ja="あなた" data-en="you">あなた</span></span></div><div class="gh-detail"><span class="i18n" data-ja="ゴールドキャップ" data-en="Gold cap">ゴールドキャップ</span></div></div>
+<div class="gh-amount recv">+200 pts</div>
+<div class="gh-date">14:32</div>
+</div>
+<div class="gh-item">
+<div class="gh-icon recv">&#127873;</div>
+<div class="gh-info"><div class="gh-name">Hiro <span style="color:var(--t3);font-weight:400">→ <span class="i18n" data-ja="あなた" data-en="you">あなた</span></span></div><div class="gh-detail"><span class="i18n" data-ja="応援スタンプ" data-en="Cheer stamp">応援スタンプ</span></div></div>
+<div class="gh-amount recv">+50 pts</div>
+<div class="gh-date">11:05</div>
+</div>
+
+<div style="padding:8px 20px;font-size:11px;color:var(--t3)"><span class="i18n" data-ja="昨日" data-en="Yesterday">昨日</span></div>
+<div class="gh-item">
+<div class="gh-icon sent">&#127873;</div>
+<div class="gh-info"><div class="gh-name"><span class="i18n" data-ja="あなた" data-en="You">あなた</span> <span style="color:var(--t3);font-weight:400">→ Yui</span></div><div class="gh-detail"><span class="i18n" data-ja="プレミアムシューズ" data-en="Premium shoes">プレミアムシューズ</span></div></div>
+<div class="gh-amount sent">-500 pts</div>
+<div class="gh-date">18:20</div>
+</div>
+<div class="gh-item">
+<div class="gh-icon recv">&#127873;</div>
+<div class="gh-info"><div class="gh-name">Ken <span style="color:var(--t3);font-weight:400">→ <span class="i18n" data-ja="あなた" data-en="you">あなた</span></span></div><div class="gh-detail"><span class="i18n" data-ja="ポロシャツ" data-en="Polo shirt">ポロシャツ</span></div></div>
+<div class="gh-amount recv">+150 pts</div>
+<div class="gh-date">09:44</div>
+</div>
+
+<div style="padding:8px 20px;font-size:11px;color:var(--t3)"><span class="i18n" data-ja="今週" data-en="This week">今週</span></div>
+<div class="gh-item">
+<div class="gh-icon recv">&#127873;</div>
+<div class="gh-info"><div class="gh-name">Aiko <span style="color:var(--t3);font-weight:400">→ <span class="i18n" data-ja="あなた" data-en="you">あなた</span></span></div><div class="gh-detail"><span class="i18n" data-ja="フルコーデセット" data-en="Full outfit set">フルコーデセット</span></div></div>
+<div class="gh-amount recv">+2,000 pts</div>
+<div class="gh-date">4/5</div>
+</div>
+<div class="gh-item">
+<div class="gh-icon sent">&#127873;</div>
+<div class="gh-info"><div class="gh-name"><span class="i18n" data-ja="あなた" data-en="You">あなた</span> <span style="color:var(--t3);font-weight:400">→ Misaki</span></div><div class="gh-detail"><span class="i18n" data-ja="サンバイザー" data-en="Sun visor">サンバイザー</span></div></div>
+<div class="gh-amount sent">-100 pts</div>
+<div class="gh-date">4/3</div>
+</div>
+
+</div>
+<div class="tb"><div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div><div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div><div class="tab on"><div class="ti">&#127873;</div><div class="tt">Gift</div></div><div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div><div class="tab"><div class="ti">&#128100;</div><div class="tt">Profile</div></div></div>
+</div></div>
+</div>
+
+<!-- ========== 21. ITEM SHOP ========== -->
+<div>
+<div class="phone-label">21. Item shop</div>
+<div class="phone"><div class="screen">
+<div class="hdr">
+<div class="hdr-back"><span class="i18n" data-ja="&#8249; 戻る" data-en="&#8249; Back">&#8249; 戻る</span></div>
+<div class="hdr-title"><span class="i18n" data-ja="アイテムショップ" data-en="Item shop">アイテムショップ</span></div>
+<div></div>
+</div>
+
+<div style="margin:0 16px 8px;display:flex;gap:8px">
+<div style="flex:1;background:var(--gs);border:1px solid rgba(45,184,122,.2);border-radius:12px;padding:10px;text-align:center">
+<div style="font-size:10px;color:var(--g)">Activity pts</div>
+<div style="font-size:18px;font-weight:700;color:var(--g)">2,480</div>
+</div>
+<div style="flex:1;background:var(--pks);border:1px solid rgba(232,107,138,.2);border-radius:12px;padding:10px;text-align:center">
+<div style="font-size:10px;color:var(--pk)">Gift pts</div>
+<div style="font-size:18px;font-weight:700;color:var(--pk)">1,840</div>
+</div>
+</div>
+
+<div class="shop-cat"><span class="i18n" data-ja="&#127466; ベーシック（Activity pts）" data-en="&#127466; Basic (Activity pts)">&#127466; ベーシック（Activity pts）</span></div>
+<div class="shop-grid">
+<div class="shop-item"><div class="shop-item-icon">&#129506;</div><div class="shop-item-name"><span class="i18n" data-ja="キャップ" data-en="Cap">キャップ</span></div><div class="shop-item-price act">80 pts</div></div>
+<div class="shop-item"><div class="shop-item-icon">&#128085;</div><div class="shop-item-name"><span class="i18n" data-ja="ポロシャツ" data-en="Polo">ポロシャツ</span></div><div class="shop-item-price act">120 pts</div></div>
+<div class="shop-item"><div class="shop-item-icon">&#128094;</div><div class="shop-item-name"><span class="i18n" data-ja="パンツ" data-en="Pants">パンツ</span></div><div class="shop-item-price act">100 pts</div></div>
+<div class="shop-item"><div class="shop-item-icon">&#128095;</div><div class="shop-item-name"><span class="i18n" data-ja="シューズ" data-en="Shoes">シューズ</span></div><div class="shop-item-price act">90 pts</div></div>
+<div class="shop-item"><div class="shop-item-icon">&#129470;</div><div class="shop-item-name"><span class="i18n" data-ja="グローブ" data-en="Glove">グローブ</span></div><div class="shop-item-price act">40 pts</div></div>
+<div class="shop-item"><div class="shop-item-icon">&#128083;</div><div class="shop-item-name"><span class="i18n" data-ja="サングラス" data-en="Sunglasses">サングラス</span></div><div class="shop-item-price act">60 pts</div></div>
+</div>
+
+<div class="shop-cat"><span class="i18n" data-ja="&#10024; プレミアム（Gift pts限定）" data-en="&#10024; Premium (Gift pts only)">&#10024; プレミアム（Gift pts限定）</span></div>
+<div class="shop-grid">
+<div class="shop-item premium"><div class="shop-badge">Gift</div><div class="shop-item-icon">&#128081;</div><div class="shop-item-name"><span class="i18n" data-ja="ゴールドキャップ" data-en="Gold cap">ゴールドキャップ</span></div><div class="shop-item-price gift">400 pts</div></div>
+<div class="shop-item premium"><div class="shop-badge">Gift</div><div class="shop-item-icon">&#10024;</div><div class="shop-item-name"><span class="i18n" data-ja="光るウェア" data-en="Glow outfit">光るウェア</span></div><div class="shop-item-price gift">800 pts</div></div>
+<div class="shop-item premium"><div class="shop-badge">Gift</div><div class="shop-item-icon">&#128142;</div><div class="shop-item-name"><span class="i18n" data-ja="ホロシューズ" data-en="Holo shoes">ホロシューズ</span></div><div class="shop-item-price gift">500 pts</div></div>
+<div class="shop-item premium"><div class="shop-badge">Gift</div><div class="shop-item-icon">&#127775;</div><div class="shop-item-name"><span class="i18n" data-ja="フルセット" data-en="Full set">フルセット</span></div><div class="shop-item-price gift">2,500 pts</div></div>
+<div class="shop-item premium"><div class="shop-badge">Gift</div><div class="shop-item-icon">&#128293;</div><div class="shop-item-name"><span class="i18n" data-ja="光るフレーム" data-en="Glow frame">光るフレーム</span></div><div class="shop-item-price gift">1,500 pts</div></div>
+<div class="shop-item premium"><div class="shop-badge">Gift</div><div class="shop-item-icon">&#127752;</div><div class="shop-item-name"><span class="i18n" data-ja="投稿エフェクト" data-en="Post effect">投稿エフェクト</span></div><div class="shop-item-price gift">2,000 pts</div></div>
+</div>
+
+</div>
+<div class="tb"><div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div><div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div><div class="tab on"><div class="ti">&#127873;</div><div class="tt">Gift</div></div><div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div><div class="tab"><div class="ti">&#128100;</div><div class="tt">Profile</div></div></div>
+</div></div>
+</div>
+
+<!-- ========== 23. VOTE DETAIL ========== -->
+<div>
+<div class="phone-label">23. Vote detail</div>
+<div class="phone"><div class="screen">
+<div class="hdr">
+<div class="hdr-back"><span class="i18n" data-ja="&#8249; 戻る" data-en="&#8249; Back">&#8249; 戻る</span></div>
+<div class="hdr-title">Vote</div>
+<div style="font-size:12px;color:var(--pk);cursor:pointer">&#127873; Gift</div>
+</div>
+
+<div class="vd-photo" style="background-image:url('https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=600&q=80')">
+<div class="vd-overlay">
+<div class="vd-user">
+<div class="vd-av" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">M</div>
+<div><div class="vd-name">Misaki</div><div class="vd-time">2h ago · 1,240 followers</div></div>
+</div>
+</div>
+</div>
+
+<div class="vd-q"><span class="i18n" data-ja="今日ここでラウンド！90切れると思う？" data-en="Playing here today! Think I can break 90?">今日ここでラウンド！90切れると思う？</span></div>
+<div style="padding:0 20px"><span class="vd-prize gd">500 pts</span> <span style="font-size:11px;color:var(--t3)"><span class="i18n" data-ja="残り2日" data-en="2 days left">残り2日</span></span></div>
+
+<div class="vd-bar">
+<div class="vd-bar-row"><div class="vd-bar-label">Yes</div><div class="vd-bar-track"><div class="vd-bar-fill y" style="width:68%"></div></div><div class="vd-bar-pct">68%</div></div>
+<div class="vd-bar-row"><div class="vd-bar-label">No</div><div class="vd-bar-track"><div class="vd-bar-fill n" style="width:32%"></div></div><div class="vd-bar-pct">32%</div></div>
+</div>
+
+<div class="vd-meta">
+<div class="vd-voters">47 votes</div>
+<div class="vd-vote-btns"><div class="vd-vote-btn yes">Yes</div><div class="vd-vote-btn no">No</div></div>
+</div>
+
+<div class="sh"><div class="stt"><span class="i18n" data-ja="コメント" data-en="Comments">コメント</span></div><div style="font-size:11px;color:var(--t3)">12</div></div>
+
+<div class="vd-comment">
+<div class="vd-comment-av" style="background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">T</div>
+<div class="vd-comment-body"><div class="vd-comment-name">Taro</div><div class="vd-comment-text"><span class="i18n" data-ja="最近調子いいから行ける！" data-en="You've been on fire lately, go for it!">最近調子いいから行ける！</span></div><div class="vd-comment-time">1h ago</div></div>
+</div>
+<div class="vd-comment">
+<div class="vd-comment-av" style="background:linear-gradient(135deg,#D4A853,#b48833)">A</div>
+<div class="vd-comment-body"><div class="vd-comment-name">Aiko</div><div class="vd-comment-text"><span class="i18n" data-ja="このコース難しいよ〜 でも応援してる！" data-en="This course is tough~ But cheering for you!">このコース難しいよ〜 でも応援してる！</span></div><div class="vd-comment-time">2h ago</div></div>
+</div>
+<div class="vd-comment">
+<div class="vd-comment-av" style="background:linear-gradient(135deg,#2DB87A,#1a8a55)">K</div>
+<div class="vd-comment-body"><div class="vd-comment-name">Ken</div><div class="vd-comment-text"><span class="i18n" data-ja="パットが鍵だね" data-en="Putting will be key">パットが鍵だね</span></div><div class="vd-comment-time">2h ago</div></div>
+</div>
+
+<div style="margin:8px 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px">
+<input style="flex:1;background:transparent;border:none;color:var(--t);font-size:13px;font-family:inherit;outline:none" placeholder="コメントを入力...">
+<div style="font-size:12px;color:var(--g);font-weight:600;cursor:pointer"><span class="i18n" data-ja="送信" data-en="Send">送信</span></div>
+</div>
+
+</div>
+<div class="tb"><div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div><div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div><div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div><div class="tab on"><div class="ti">&#9829;</div><div class="tt">Vote</div></div><div class="tab"><div class="ti">&#128100;</div><div class="tt">Profile</div></div></div>
+</div></div>
+</div>
+
+<!-- ========== 24. VOTE RESULT ========== -->
+<div>
+<div class="phone-label">24. Vote result</div>
+<div class="phone"><div class="screen">
+<div class="hdr">
+<div class="hdr-back"><span class="i18n" data-ja="&#8249; 戻る" data-en="&#8249; Back">&#8249; 戻る</span></div>
+<div class="hdr-title"><span class="i18n" data-ja="投票結果" data-en="Vote result">投票結果</span></div>
+<div></div>
+</div>
+
+<div class="vr-hero">
+<div class="vr-label"><span class="i18n" data-ja="&#10003; 的中！" data-en="&#10003; Correct!">&#10003; 的中！</span></div>
+<div class="vr-answer">Yes!</div>
+<div class="vr-q"><span class="i18n" data-ja="Misakiは90切った！スコア: 88" data-en="Misaki broke 90! Score: 88">Misakiは90切った！スコア: 88</span></div>
+</div>
+
+<div class="vr-reward">
+<div class="vr-reward-label"><span class="i18n" data-ja="獲得報酬" data-en="Reward earned">獲得報酬</span></div>
+<div class="vr-reward-num">+30 pts</div>
+</div>
+
+<div class="vr-breakdown">
+<div style="font-size:13px;font-weight:600;color:var(--t);margin-bottom:8px"><span class="i18n" data-ja="投票結果" data-en="Vote breakdown">投票結果</span></div>
+<div class="vr-breakdown-row"><span class="vr-breakdown-label"><span class="i18n" data-ja="総投票数" data-en="Total votes">総投票数</span></span><span class="vr-breakdown-val">47</span></div>
+<div class="vr-breakdown-row"><span class="vr-breakdown-label">Yes</span><span class="vr-breakdown-val" style="color:var(--g)">32 (68%)</span></div>
+<div class="vr-breakdown-row"><span class="vr-breakdown-label">No</span><span class="vr-breakdown-val" style="color:var(--bl)">15 (32%)</span></div>
+<div class="vr-breakdown-row"><span class="vr-breakdown-label"><span class="i18n" data-ja="結果" data-en="Outcome">結果</span></span><span class="vr-breakdown-val" style="color:var(--g)">Yes &#10003;</span></div>
+<div class="vr-breakdown-row"><span class="vr-breakdown-label"><span class="i18n" data-ja="あなたの予測" data-en="Your prediction">あなたの予測</span></span><span class="vr-breakdown-val" style="color:var(--g)">Yes &#10003;</span></div>
+<div class="vr-breakdown-row"><span class="vr-breakdown-label">Trust</span><span class="vr-breakdown-val">100%</span></div>
+</div>
+
+<div style="margin:8px 16px;background:var(--gds);border:1px solid rgba(212,168,83,.2);border-radius:12px;padding:12px 14px;text-align:center">
+<div style="font-size:11px;color:var(--gd);margin-bottom:2px"><span class="i18n" data-ja="VOTE的中バッジに近づいています" data-en="Getting closer to prediction badge">VOTE的中バッジに近づいています</span></div>
+<div style="font-size:14px;font-weight:700;color:var(--gd)">7 / 10 <span style="font-size:11px;font-weight:400"><span class="i18n" data-ja="的中" data-en="correct">的中</span></span></div>
+</div>
+
+<div class="btn btn-primary"><span class="i18n" data-ja="他のVOTEを見る" data-en="Browse more votes">他のVOTEを見る</span></div>
+
+</div>
+<div class="tb"><div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div><div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div><div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div><div class="tab on"><div class="ti">&#9829;</div><div class="tt">Vote</div></div><div class="tab"><div class="ti">&#128100;</div><div class="tt">Profile</div></div></div>
+</div></div>
+</div>
+
+<!-- ========== 27. OTHER PROFILE ========== -->
+<div>
+<div class="phone-label">27. Other profile</div>
+<div class="phone"><div class="screen">
+<div class="hdr">
+<div class="hdr-back"><span class="i18n" data-ja="&#8249; 戻る" data-en="&#8249; Back">&#8249; 戻る</span></div>
+<div class="hdr-title"><span class="i18n" data-ja="プロフィール" data-en="Profile">プロフィール</span></div>
+<div></div>
+</div>
+
+<div class="op-hero">
+<div class="op-av" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">M</div>
+<div class="op-name">Misaki</div>
+<div class="op-handle">@misaki_golf · HC 22.1</div>
+<div class="op-stats">
+<div class="op-stat"><div class="op-stat-num pk">1,240</div><div class="op-stat-label"><span class="i18n" data-ja="フォロワー" data-en="Followers">フォロワー</span></div></div>
+<div class="op-stat"><div class="op-stat-num">23</div><div class="op-stat-label"><span class="i18n" data-ja="ラウンド" data-en="Rounds">ラウンド</span></div></div>
+<div class="op-stat"><div class="op-stat-num gd">Lv.8</div><div class="op-stat-label"><span class="i18n" data-ja="アバター" data-en="Avatar">アバター</span></div></div>
+<div class="op-stat"><div class="op-stat-num g">80%</div><div class="op-stat-label">Trust</div></div>
+</div>
+</div>
+
+<div class="op-actions">
+<div class="op-action follow"><span class="i18n" data-ja="フォローする" data-en="Follow">フォローする</span></div>
+<div class="op-action gift"><span class="i18n" data-ja="&#127873; Gift" data-en="&#127873; Gift">&#127873; Gift</span></div>
+</div>
+
+<div style="margin:4px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div style="background:var(--pks);border:1px solid rgba(232,107,138,.2);border-radius:12px;padding:10px;text-align:center">
+<div style="font-size:10px;color:var(--pk)"><span class="i18n" data-ja="受取Gift" data-en="Gifts received">受取Gift</span></div>
+<div style="font-size:16px;font-weight:700;color:var(--pk)">4,820 pts</div>
+</div>
+<div style="background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;text-align:center">
+<div style="font-size:10px;color:var(--t3)"><span class="i18n" data-ja="ベストスコア" data-en="Best score">ベストスコア</span></div>
+<div style="font-size:16px;font-weight:700;color:var(--t)">92</div>
+</div>
+</div>
+
+<div class="sh"><div class="stt"><span class="i18n" data-ja="最近のラウンド" data-en="Recent rounds">最近のラウンド</span></div></div>
+<div class="op-round"><div class="av" style="width:32px;height:32px;font-size:12px;background:linear-gradient(135deg,#E86B8A,#c74b6a)">M</div><div class="op-round-info"><div class="op-round-course"><span class="i18n" data-ja="軽井沢72ゴルフ" data-en="Karuizawa 72 Golf">軽井沢72ゴルフ</span></div><div class="op-round-date"><span class="i18n" data-ja="2日前" data-en="2 days ago">2日前</span> · Trust 80%</div></div><div class="op-round-score">94</div></div>
+<div class="op-round"><div class="av" style="width:32px;height:32px;font-size:12px;background:linear-gradient(135deg,#E86B8A,#c74b6a)">M</div><div class="op-round-info"><div class="op-round-course"><span class="i18n" data-ja="武蔵カントリー" data-en="Musashi Country">武蔵カントリー</span></div><div class="op-round-date"><span class="i18n" data-ja="2週間前" data-en="2 weeks ago">2週間前</span> · Trust 100%</div></div><div class="op-round-score">92</div></div>
+
+<div class="sh"><div class="stt"><span class="i18n" data-ja="アクティブVOTE" data-en="Active votes">アクティブVOTE</span></div></div>
+<div style="margin:4px 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 14px">
+<div style="font-size:13px;font-weight:600;color:var(--t);margin-bottom:4px"><span class="i18n" data-ja="Misakiは次90切れる？" data-en="Can Misaki break 90 next?">Misakiは次90切れる？</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center">
+<div style="font-size:11px;color:var(--t3)">47 votes · <span class="i18n" data-ja="残り2日" data-en="2 days left">残り2日</span></div>
+<div style="font-size:11px;font-weight:600;color:var(--g);background:var(--gs);padding:4px 12px;border-radius:20px">Vote</div>
+</div>
+</div>
+
+</div>
+<div class="tb"><div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div><div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div><div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div><div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div><div class="tab on"><div class="ti">&#128100;</div><div class="tt">Profile</div></div></div>
+</div></div>
+</div>
+
+<!-- ========== 31. FOLLOWERS ========== -->
+<div>
+<div class="phone-label">31. Followers</div>
+<div class="phone"><div class="screen">
+<div class="hdr">
+<div class="hdr-back"><span class="i18n" data-ja="&#8249; 戻る" data-en="&#8249; Back">&#8249; 戻る</span></div>
+<div class="hdr-title">Misaki</div>
+<div></div>
+</div>
+
+<div class="fl-tabs">
+<div class="fl-tab on"><span class="i18n" data-ja="フォロワー" data-en="Followers">フォロワー</span> <span style="color:var(--g)">1,240</span></div>
+<div class="fl-tab"><span class="i18n" data-ja="フォロー中" data-en="Following">フォロー中</span> <span>89</span></div>
+</div>
+
+<div style="padding:0 16px">
+<div class="fl-item">
+<div class="av" style="width:38px;height:38px;font-size:14px;background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">T</div>
+<div class="fl-info"><div class="fl-name">Taro</div><div class="fl-sub">HC 15.2 · <span class="i18n" data-ja="2,340 フォロワー" data-en="2,340 followers">2,340 フォロワー</span></div></div>
+<div class="fl-btn following"><span class="i18n" data-ja="フォロー中" data-en="Following">フォロー中</span></div>
+</div>
+<div class="fl-item">
+<div class="av" style="width:38px;height:38px;font-size:14px;background:linear-gradient(135deg,#2DB87A,#1a8a55)">K</div>
+<div class="fl-info"><div class="fl-name">Ken</div><div class="fl-sub">HC 18.4 · <span class="i18n" data-ja="890 フォロワー" data-en="890 followers">890 フォロワー</span></div></div>
+<div class="fl-btn following"><span class="i18n" data-ja="フォロー中" data-en="Following">フォロー中</span></div>
+</div>
+<div class="fl-item">
+<div class="av" style="width:38px;height:38px;font-size:14px;background:linear-gradient(135deg,#D4A853,#b48833)">H</div>
+<div class="fl-info"><div class="fl-name">Hiro</div><div class="fl-sub">HC 25.0 · <span class="i18n" data-ja="560 フォロワー" data-en="560 followers">560 フォロワー</span></div></div>
+<div class="fl-btn follow"><span class="i18n" data-ja="フォロー" data-en="Follow">フォロー</span></div>
+</div>
+<div class="fl-item">
+<div class="av" style="width:38px;height:38px;font-size:14px;background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div>
+<div class="fl-info"><div class="fl-name">Yui</div><div class="fl-sub">HC 12.0 · <span class="i18n" data-ja="3,120 フォロワー" data-en="3,120 followers">3,120 フォロワー</span></div></div>
+<div class="fl-btn following"><span class="i18n" data-ja="フォロー中" data-en="Following">フォロー中</span></div>
+</div>
+<div class="fl-item">
+<div class="av" style="width:38px;height:38px;font-size:14px;background:linear-gradient(135deg,#9B7AFF,#7b5adf)">R</div>
+<div class="fl-info"><div class="fl-name">Rina</div><div class="fl-sub">HC 28.5 · <span class="i18n" data-ja="430 フォロワー" data-en="430 followers">430 フォロワー</span></div></div>
+<div class="fl-btn follow"><span class="i18n" data-ja="フォロー" data-en="Follow">フォロー</span></div>
+</div>
+<div class="fl-item">
+<div class="av" style="width:38px;height:38px;font-size:14px;background:linear-gradient(135deg,#E86B8A,#c74b6a)">S</div>
+<div class="fl-info"><div class="fl-name">Saki</div><div class="fl-sub">HC 20.1 · <span class="i18n" data-ja="780 フォロワー" data-en="780 followers">780 フォロワー</span></div></div>
+<div class="fl-btn follow"><span class="i18n" data-ja="フォロー" data-en="Follow">フォロー</span></div>
+</div>
+</div>
+
+</div>
+<div class="tb"><div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div><div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div><div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div><div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div><div class="tab on"><div class="ti">&#128100;</div><div class="tt">Profile</div></div></div>
+</div></div>
+</div>
+
+<!-- ========== 32. RANKING ========== -->
+<div>
+<div class="phone-label">32. Ranking</div>
+<div class="phone"><div class="screen">
+<div class="hdr">
+<div class="hdr-title"><span class="i18n" data-ja="ランキング" data-en="Ranking">ランキング</span></div>
+</div>
+
+<div class="rk-filter">
+<div class="pill on"><span class="i18n" data-ja="スコア" data-en="Score">スコア</span></div>
+<div class="pill"><span class="i18n" data-ja="ギフト" data-en="Gift">ギフト</span></div>
+<div class="pill"><span class="i18n" data-ja="フォロワー" data-en="Followers">フォロワー</span></div>
+<div class="pill"><span class="i18n" data-ja="Lv" data-en="Lv">Lv</span></div>
+</div>
+
+<div class="rk-hero">
+<div class="rk-podium" style="margin-bottom:0">
+<div class="rk-podium-rank">&#129352;</div>
+<div class="rk-podium-av" style="width:44px;height:44px;font-size:16px;background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">T</div>
+<div class="rk-podium-name">Taro</div>
+<div class="rk-podium-score" style="color:var(--t2)">84</div>
+<div class="rk-bar" style="height:50px;background:var(--bls);margin-top:6px"></div>
+</div>
+<div class="rk-podium" style="margin-bottom:0">
+<div class="rk-podium-rank">&#129351;</div>
+<div class="rk-podium-av" style="width:52px;height:52px;font-size:18px;background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div>
+<div class="rk-podium-name">Yui</div>
+<div class="rk-podium-score" style="color:var(--gd)">82</div>
+<div class="rk-bar" style="height:70px;background:var(--gds);margin-top:6px"></div>
+</div>
+<div class="rk-podium" style="margin-bottom:0">
+<div class="rk-podium-rank">&#129353;</div>
+<div class="rk-podium-av" style="width:40px;height:40px;font-size:14px;background:linear-gradient(135deg,#D4A853,#b48833)">A</div>
+<div class="rk-podium-name">Aiko</div>
+<div class="rk-podium-score" style="color:var(--t2)">87</div>
+<div class="rk-bar" style="height:40px;background:var(--gds);margin-top:6px;opacity:.5"></div>
+</div>
+</div>
+
+<div class="rk-list-item">
+<div class="rk-num">4</div>
+<div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#E86B8A,#c74b6a)">M</div>
+<div class="rk-info"><div class="rk-name">Misaki</div><div class="rk-meta">HC 22.1 · 1,240 followers</div></div>
+<div class="rk-score">89</div>
+</div>
+<div class="rk-list-item rk-you">
+<div class="rk-num" style="color:var(--g)">5</div>
+<div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#2DB87A,#1a8a55)">K</div>
+<div class="rk-info"><div class="rk-name">Ken <span style="font-size:10px;color:var(--g);font-weight:400"><span class="i18n" data-ja="（あなた）" data-en="(you)">(あなた)</span></span></div><div class="rk-meta">HC 18.4 · 890 followers</div></div>
+<div class="rk-score">89</div>
+</div>
+<div class="rk-list-item">
+<div class="rk-num">6</div>
+<div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#9B7AFF,#7b5adf)">R</div>
+<div class="rk-info"><div class="rk-name">Rina</div><div class="rk-meta">HC 28.5 · 430 followers</div></div>
+<div class="rk-score">93</div>
+</div>
+<div class="rk-list-item">
+<div class="rk-num">7</div>
+<div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#E86B8A,#c74b6a)">S</div>
+<div class="rk-info"><div class="rk-name">Saki</div><div class="rk-meta">HC 20.1 · 780 followers</div></div>
+<div class="rk-score">95</div>
+</div>
+<div class="rk-list-item">
+<div class="rk-num">8</div>
+<div class="av" style="width:34px;height:34px;font-size:12px;background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">N</div>
+<div class="rk-info"><div class="rk-name">Naoto</div><div class="rk-meta">HC 30.0 · 120 followers</div></div>
+<div class="rk-score">98</div>
+</div>
+
+</div>
+<div class="tb"><div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div><div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div><div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div><div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div><div class="tab on"><div class="ti">&#128100;</div><div class="tt">Profile</div></div></div>
+</div></div>
+</div>
+
+<script>
+function setLang(lang){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===lang.toUpperCase()));document.querySelectorAll('.i18n').forEach(el=>{const t=el.getAttribute('data-'+lang);if(t)el.innerHTML=t})}
+</script>
+</body>
+</html>
