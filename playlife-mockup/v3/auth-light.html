@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#f0f0f0;display:flex;justify-content:center;gap:24px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:390px;height:844px;background:#fff;border-radius:44px;border:3px solid #e0e0e0;overflow:hidden;position:relative;flex-shrink:0;box-shadow:0 20px 60px rgba(0,0,0,0.12)}
+.phone-label{color:#999;font-size:11px;text-align:center;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:20px}
+.screen::-webkit-scrollbar{display:none}
+
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;
+  --card:#ffffff;
+  --shadow:rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.08) 0px 4px 12px;
+  --shadow-hover:rgba(0,0,0,0.06) 0px 6px 16px;
+  --g:#2DB87A;--gd:#1a8a55;--gs:#E8F5EE;
+  --gold:#D4A853;--golds:#FFF8E8;
+  --pk:#E86B8A;--pks:#FFF0F3;
+  --bl:#5B9EF4;--bls:#EEF4FF;
+  --pp:#9B7AFF;
+  --t1:#222222;--t2:#6a6a6a;--t3:#999999;
+  --bd:rgba(0,0,0,0.08);
+}
+
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:54px 20px 12px}
+.hdr-title{font-size:17px;font-weight:600;color:var(--t1)}
+.hdr-back{font-size:14px;color:var(--t2);cursor:pointer}
+.btn{display:block;margin:12px 16px;padding:14px;border-radius:14px;text-align:center;font-size:14px;font-weight:600;cursor:pointer;transition:transform .15s}
+.btn:hover{transform:scale(1.02)}
+.btn-primary{background:var(--g);color:#fff;box-shadow:0 4px 12px rgba(45,184,122,0.2)}
+.btn-secondary{background:var(--card);color:var(--t1);box-shadow:var(--shadow)}
+
+/* Splash */
+.splash{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;background:linear-gradient(180deg,#e8f5ee 0%,#fff 100%)}
+.splash-tagline{font-size:14px;color:var(--t3);margin-top:8px;letter-spacing:1px}
+.splash-loader{width:32px;height:32px;border:2px solid #eee;border-top-color:var(--g);border-radius:50%;animation:spin 1s linear infinite;margin-top:40px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Login */
+.login-hero{text-align:center;padding:40px 20px 20px}
+.login-title{font-size:20px;font-weight:700;color:var(--t1);margin-bottom:4px;margin-top:16px}
+.login-sub{font-size:13px;color:var(--t2)}
+.input-group{margin:8px 16px}
+.input-label{font-size:12px;font-weight:500;color:var(--t2);margin-bottom:4px}
+.input-field{width:100%;padding:12px 14px;background:var(--bg2);border:1px solid var(--bd);border-radius:12px;color:var(--t1);font-size:14px;font-family:inherit;outline:none}
+.input-field:focus{border-color:var(--g)}
+.input-field::placeholder{color:var(--t3)}
+.divider{display:flex;align-items:center;gap:12px;margin:16px 16px;color:var(--t3);font-size:11px}
+.divider::before,.divider::after{content:'';flex:1;height:0.5px;background:var(--bd)}
+.social-btns{display:flex;gap:10px;padding:0 16px}
+.social-btn{flex:1;padding:12px;border-radius:12px;background:var(--card);text-align:center;font-size:12px;font-weight:500;color:var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:var(--shadow);transition:all .2s}
+.social-btn:hover{box-shadow:var(--shadow-hover)}
+.forgot{text-align:center;margin:12px 0;font-size:12px;color:var(--g);cursor:pointer;font-weight:500}
+.signup-link{text-align:center;font-size:13px;color:var(--t2);margin:16px 0}
+.signup-link span{color:var(--g);font-weight:600;cursor:pointer}
+
+/* Signup */
+.avatar-picker{display:flex;justify-content:center;gap:12px;margin:16px 0}
+.avatar-option{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border:2px solid transparent;transition:border-color .2s;box-shadow:var(--shadow)}
+.avatar-option.selected{border-color:var(--g);box-shadow:0 0 0 3px rgba(45,184,122,0.15)}
+.gender-btns{display:flex;gap:8px;padding:0 16px;margin:8px 0}
+.gender-btn{flex:1;padding:10px;border-radius:12px;background:var(--bg2);text-align:center;font-size:13px;color:var(--t2);cursor:pointer;transition:all .2s}
+.gender-btn.selected{background:var(--gs);color:var(--g);font-weight:600}
+
+/* Tutorial */
+.tut-page{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;min-height:auto;padding-top:20px}
+.tut-icon{font-size:64px;margin-bottom:20px}
+.tut-title{font-size:20px;font-weight:700;color:var(--t1);margin-bottom:8px}
+.tut-desc{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:24px}
+.tut-dots{display:flex;gap:6px;justify-content:center;margin-bottom:24px}
+.tut-dot{width:8px;height:8px;border-radius:50%;background:#eee}
+.tut-dot.active{background:var(--g);width:20px;border-radius:4px}
+.tut-features{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin:16px 0}
+.tut-feat{background:var(--card);border-radius:14px;padding:16px 10px;text-align:center;box-shadow:var(--shadow)}
+.tut-feat-icon{font-size:24px;margin-bottom:4px}
+.tut-feat-name{font-size:12px;font-weight:600;color:var(--t1)}
+.tut-feat-desc{font-size:10px;color:var(--t3);margin-top:2px}
+
+/* Tab Bar */
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0}
+.ti{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);transition:all .2s}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:9px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g);font-weight:600}
+
+.mode-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.mode-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .2s}
+.mode-btn.active{background:var(--g);color:#fff}
+.lang-toggle{position:fixed;top:12px;left:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.lang-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .2s}
+.lang-btn.active{background:var(--g);color:#fff}
+</style>
+</head>
+<body>
+
+<div class="mode-toggle">
+  <button class="mode-btn active">Light</button>
+  <button class="mode-btn">Dark</button>
+</div>
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('ja')">JA</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- ========== 1. SPLASH ========== -->
+<div>
+<div class="phone-label">1. Splash -- Light</div>
+<div class="phone"><div class="screen" style="padding-bottom:0">
+<div class="splash">
+  <img src="golfin-logo.png" style="height:36px" alt="GOLFIN" onerror="this.outerHTML='<div style=&quot;font-size:32px;font-weight:700;color:#222&quot;>GOLF<span style=&quot;color:#2DB87A&quot;>IN</span></div>'">
+  <div class="splash-tagline"><span class="i18n" data-ja="動けば、価値になる。" data-en="Move. Earn. Be valued.">動けば、価値になる。</span></div>
+  <div class="splash-loader"></div>
+</div>
+</div></div>
+</div>
+
+<!-- ========== 2. LOGIN ========== -->
+<div>
+<div class="phone-label">2. Login -- Light</div>
+<div class="phone"><div class="screen" style="padding-bottom:0">
+<div class="login-hero">
+  <img src="golfin-logo.png" style="height:28px" alt="GOLFIN" onerror="this.outerHTML='<div style=&quot;font-size:24px;font-weight:700;color:#222;margin-bottom:8px&quot;>GOLF<span style=&quot;color:#2DB87A&quot;>IN</span></div>'">
+  <div class="login-title"><span class="i18n" data-ja="おかえりなさい" data-en="Welcome back">おかえりなさい</span></div>
+  <div class="login-sub"><span class="i18n" data-ja="ログインしてゴルフを始めよう" data-en="Log in to start your round">ログインしてゴルフを始めよう</span></div>
+</div>
+
+<div class="input-group">
+  <div class="input-label"><span class="i18n" data-ja="メールアドレス" data-en="Email">メールアドレス</span></div>
+  <input class="input-field" type="email" placeholder="email@example.com">
+</div>
+<div class="input-group">
+  <div class="input-label"><span class="i18n" data-ja="パスワード" data-en="Password">パスワード</span></div>
+  <input class="input-field" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;">
+</div>
+
+<div class="forgot"><span class="i18n" data-ja="パスワードを忘れた" data-en="Forgot password?">パスワードを忘れた</span></div>
+<div class="btn btn-primary"><span class="i18n" data-ja="ログイン" data-en="Log in">ログイン</span></div>
+
+<div class="divider"><span class="i18n" data-ja="または" data-en="or">または</span></div>
+
+<div class="social-btns">
+  <div class="social-btn"><span style="font-size:16px">G</span> Google</div>
+  <div class="social-btn"><span style="font-size:16px">&#63743;</span> Apple</div>
+  <div class="social-btn"><span style="font-size:16px">&#120143;</span> X</div>
+</div>
+
+<div class="signup-link"><span class="i18n" data-ja="アカウントをお持ちでない方" data-en="Don't have an account?">アカウントをお持ちでない方</span> <span><span class="i18n" data-ja="新規登録" data-en="Sign up">新規登録</span></span></div>
+</div></div>
+</div>
+
+<!-- ========== 3. SIGNUP ========== -->
+<div>
+<div class="phone-label">3. Signup -- Light</div>
+<div class="phone"><div class="screen" style="padding-bottom:0">
+<div class="hdr">
+  <div class="hdr-back"><span class="i18n" data-ja="&#8249; 戻る" data-en="&#8249; Back">&#8249; 戻る</span></div>
+  <div class="hdr-title"><span class="i18n" data-ja="新規登録" data-en="Sign up">新規登録</span></div>
+  <div></div>
+</div>
+
+<div style="text-align:center;padding:8px 0">
+  <div class="avatar-picker">
+    <div class="avatar-option" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">&#9971;</div>
+    <div class="avatar-option selected" style="background:linear-gradient(135deg,#2DB87A,#1a8a55)">&#9971;</div>
+    <div class="avatar-option" style="background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">&#9971;</div>
+    <div class="avatar-option" style="background:linear-gradient(135deg,#D4A853,#b48833)">&#9971;</div>
+  </div>
+  <div style="font-size:11px;color:var(--t3)"><span class="i18n" data-ja="アバターカラーを選択" data-en="Choose avatar color">アバターカラーを選択</span></div>
+</div>
+
+<div class="input-group">
+  <div class="input-label"><span class="i18n" data-ja="ニックネーム" data-en="Nickname">ニックネーム</span></div>
+  <input class="input-field" placeholder="Misaki">
+</div>
+<div class="input-group">
+  <div class="input-label"><span class="i18n" data-ja="メールアドレス" data-en="Email">メールアドレス</span></div>
+  <input class="input-field" type="email" placeholder="email@example.com">
+</div>
+<div class="input-group">
+  <div class="input-label"><span class="i18n" data-ja="パスワード" data-en="Password">パスワード</span></div>
+  <input class="input-field" type="password" placeholder="8文字以上">
+</div>
+
+<div style="padding:8px 20px;font-size:12px;font-weight:500;color:var(--t2)"><span class="i18n" data-ja="ゴルフ歴" data-en="Golf experience">ゴルフ歴</span></div>
+<div class="gender-btns">
+  <div class="gender-btn"><span class="i18n" data-ja="初心者" data-en="Beginner">初心者</span></div>
+  <div class="gender-btn selected"><span class="i18n" data-ja="中級者" data-en="Intermediate">中級者</span></div>
+  <div class="gender-btn"><span class="i18n" data-ja="上級者" data-en="Advanced">上級者</span></div>
+</div>
+
+<div class="input-group">
+  <div class="input-label"><span class="i18n" data-ja="ハンディキャップ（任意）" data-en="Handicap (optional)">ハンディキャップ（任意）</span></div>
+  <input class="input-field" placeholder="18.4">
+</div>
+
+<div class="btn btn-primary"><span class="i18n" data-ja="アカウント作成" data-en="Create account">アカウント作成</span></div>
+
+<div style="text-align:center;font-size:10px;color:var(--t3);padding:0 24px 16px;line-height:1.5"><span class="i18n" data-ja="アカウント作成により利用規約とプライバシーポリシーに同意します" data-en="By creating an account you agree to our Terms and Privacy Policy">アカウント作成により利用規約とプライバシーポリシーに同意します</span></div>
+</div></div>
+</div>
+
+<!-- ========== 4. TUTORIAL ========== -->
+<div>
+<div class="phone-label">4. Tutorial -- Light</div>
+<div class="phone"><div class="screen" style="padding-bottom:0">
+<div style="text-align:right;padding:54px 20px 0"><span style="font-size:13px;color:var(--t3);cursor:pointer"><span class="i18n" data-ja="スキップ" data-en="Skip">スキップ</span></span></div>
+
+<div class="tut-page">
+  <div class="tut-icon">&#9971;</div>
+  <div class="tut-title"><span class="i18n" data-ja="GOLFINへようこそ" data-en="Welcome to GOLFIN">GOLFINへようこそ</span></div>
+  <div class="tut-desc"><span class="i18n" data-ja="ゴルフするだけでポイントが貯まり、ファンからギフトがもらえるゴルフ版TikTok" data-en="Earn points just by playing golf. Receive gifts from fans. TikTok for golf.">ゴルフするだけでポイントが貯まり、ファンからギフトがもらえるゴルフ版TikTok</span></div>
+
+  <div class="tut-dots">
+    <div class="tut-dot active"></div>
+    <div class="tut-dot"></div>
+    <div class="tut-dot"></div>
+    <div class="tut-dot"></div>
+  </div>
+
+  <div class="tut-features">
+    <div class="tut-feat">
+      <div class="tut-feat-icon">&#128247;</div>
+      <div class="tut-feat-name">Screenshot</div>
+      <div class="tut-feat-desc"><span class="i18n" data-ja="スコアをAIが読み取り" data-en="AI reads your scorecard">スコアをAIが読み取り</span></div>
+    </div>
+    <div class="tut-feat">
+      <div class="tut-feat-icon">&#128205;</div>
+      <div class="tut-feat-name">Check In</div>
+      <div class="tut-feat-desc"><span class="i18n" data-ja="GPSで証明" data-en="GPS verification">GPSで証明</span></div>
+    </div>
+    <div class="tut-feat">
+      <div class="tut-feat-icon">&#9829;</div>
+      <div class="tut-feat-name">Vote</div>
+      <div class="tut-feat-desc"><span class="i18n" data-ja="予測して楽しむ" data-en="Predict and enjoy">予測して楽しむ</span></div>
+    </div>
+    <div class="tut-feat">
+      <div class="tut-feat-icon">&#127873;</div>
+      <div class="tut-feat-name">Gift</div>
+      <div class="tut-feat-desc"><span class="i18n" data-ja="応援を届ける" data-en="Support golfers">応援を届ける</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="btn btn-primary"><span class="i18n" data-ja="はじめる" data-en="Get started">はじめる</span></div>
+</div></div>
+</div>
+
+<script>
+function setLang(lang){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===lang.toUpperCase()));document.querySelectorAll('.i18n').forEach(el=>{const t=el.getAttribute('data-'+lang);if(t)el.innerHTML=t})}
+</script>
+</body>
+</html>
