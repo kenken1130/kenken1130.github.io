@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#f0f0f0;display:flex;justify-content:center;gap:24px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:390px;height:844px;background:#fff;border-radius:44px;border:3px solid #e0e0e0;overflow:hidden;position:relative;flex-shrink:0;box-shadow:0 20px 60px rgba(0,0,0,0.12)}
+.phone-label{color:#999;font-size:11px;text-align:center;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:80px}
+.screen::-webkit-scrollbar{display:none}
+
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;
+  --card:#ffffff;
+  --shadow:rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.08) 0px 4px 12px;
+  --shadow-hover:rgba(0,0,0,0.06) 0px 6px 16px;
+  --g:#2DB87A;--gd:#1a8a55;--gs:#E8F5EE;
+  --gold:#D4A853;--golds:#FFF8E8;
+  --pk:#E86B8A;--pks:#FFF0F3;
+  --bl:#5B9EF4;--bls:#EEF4FF;
+  --pp:#9B7AFF;
+  --t1:#222222;--t2:#6a6a6a;--t3:#999999;
+  --bd:rgba(0,0,0,0.08);
+}
+
+/* Header */
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:54px 20px 12px}
+.logo-wrap{display:flex;align-items:center;gap:8px}
+.logo img{height:28px}
+.hdr-badge{font-size:10px;font-weight:600;color:var(--g);border:1.5px solid var(--g);padding:3px 10px;border-radius:20px;letter-spacing:1px}
+.hdr-icons{display:flex;gap:8px}
+.ic{width:36px;height:36px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:14px;cursor:pointer;transition:all .2s}
+.ic:hover{background:#eee}
+
+/* Profile Hero */
+.hero{margin:8px 16px;background:linear-gradient(135deg,#1e8a55,#0f5a35);border-radius:20px;padding:20px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.06)}
+.hero-top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;color:#fff;border:2.5px solid rgba(255,255,255,0.2);flex-shrink:0}
+.av.pk{background:linear-gradient(135deg,#E86B8A,#c74b6a)}
+.av.g{background:linear-gradient(135deg,var(--g),#1a8a55)}
+.av.bl{background:linear-gradient(135deg,var(--bl),#3b7ed4)}
+.av.gd{background:linear-gradient(135deg,var(--gold),#b48833)}
+.nm{font-size:17px;font-weight:600;color:#fff;letter-spacing:-0.2px}
+.sub{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.st{text-align:center}
+.sn{font-size:18px;font-weight:700;color:#fff}
+.sn.green{color:#5DCAA5}.sn.gold{color:#EBC57A}.sn.pink{color:#F5A0B5}
+.sl{font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+
+/* Flow Strip */
+.flow{margin:10px 16px;background:var(--card);border-radius:16px;padding:14px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
+.fi{display:flex;flex-direction:column;align-items:center;gap:4px}
+.fd{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;background:var(--g);color:#fff}
+.ft{font-size:9px;color:var(--t3);text-align:center;line-height:1.2;font-weight:500}
+.fa{color:var(--t3);font-size:12px}
+
+/* Action Buttons */
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px 16px}
+.act{background:var(--card);border-radius:16px;padding:14px 6px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.act:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.ai{width:38px;height:38px;border-radius:12px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ai.gb{background:var(--gs);color:var(--g)}
+.ai.bb{background:var(--bls);color:var(--bl)}
+.ai.pb{background:var(--pks);color:var(--pk)}
+.ai.gdb{background:var(--golds);color:var(--gold)}
+.al{font-size:11px;color:var(--t2);font-weight:500}
+
+/* Section Header */
+.sh{display:flex;justify-content:space-between;align-items:center;padding:18px 20px 8px}
+.stt{font-size:17px;font-weight:700;color:var(--t1);letter-spacing:-0.2px}
+.stl{font-size:12px;color:var(--g);cursor:pointer;font-weight:500}
+
+/* Gift Feed */
+.gf{padding:4px 16px;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none}
+.gf::-webkit-scrollbar{display:none}
+.gi{flex-shrink:0;width:130px;background:var(--card);border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.gi:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.ga{width:42px;height:42px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff}
+.gn{font-size:12px;font-weight:600;color:var(--t1)}
+.gac{font-size:10px;color:var(--pk);margin-top:2px;font-weight:500}
+.gam{font-size:14px;font-weight:700;color:var(--gold);margin-top:4px}
+
+/* Vote Card */
+.vc{margin:6px 16px 8px;background:var(--card);border-radius:16px;padding:16px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.vc:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px)}
+.vt{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.vq{font-size:15px;font-weight:600;color:var(--t1);flex:1;line-height:1.4;letter-spacing:-0.2px}
+.vp{font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;margin-left:8px;white-space:nowrap}
+.vp.gold{background:var(--golds);color:var(--gold)}
+.vp.pink{background:var(--pks);color:var(--pk)}
+.vb{margin-bottom:8px}
+.vr{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.vrl{font-size:12px;color:var(--t2);width:28px;font-weight:500}
+.vbt{flex:1;height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden}
+.vbf{height:100%;border-radius:3px}
+.vbf.y{background:var(--g)}.vbf.n{background:var(--bl)}
+.vpc{font-size:12px;font-weight:600;color:var(--t2);width:32px;text-align:right}
+.vm{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.vml{font-size:11px;color:var(--t3)}
+.vm-actions{display:flex;gap:6px}
+.vmb{font-size:11px;font-weight:600;color:var(--g);background:var(--gs);padding:5px 14px;border-radius:20px;cursor:pointer;transition:background .2s}
+.vmb:hover{background:#d0f0e0}
+.vm-gift{font-size:11px;font-weight:600;color:var(--pk);background:var(--pks);padding:5px 14px;border-radius:20px;cursor:pointer}
+
+/* Round Card */
+.rc{margin:6px 16px;background:var(--card);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.rc:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px)}
+.ri{flex:1}
+.rn{font-size:13px;font-weight:600;color:var(--t1)}
+.rco{font-size:11px;color:var(--t3);margin-top:2px}
+.rtr{font-size:10px;color:var(--g);margin-top:2px;font-weight:500}
+.rr{text-align:right}
+.rs{font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-0.5px}
+.rd{font-size:11px;color:var(--t3)}
+.rp{font-size:11px;color:var(--g);margin-top:2px;font-weight:500}
+.rbst{font-size:9px;font-weight:600;color:var(--gold);background:var(--golds);padding:2px 6px;border-radius:6px;display:inline-block;margin-top:2px}
+
+/* Tab Bar */
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0}
+.ti{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);transition:all .2s}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:9px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g);font-weight:600}
+
+/* FAB */
+.fab{position:absolute;bottom:88px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(45,184,122,0.35);transition:transform .2s}
+.fab:hover{transform:scale(1.08)}
+
+/* Mode toggle */
+.mode-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.mode-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .2s}
+.mode-btn.active{background:var(--g);color:#fff}
+</style>
+</head>
+<body>
+
+<div class="mode-toggle">
+  <button class="mode-btn active">Light</button>
+  <button class="mode-btn">Dark</button>
+</div>
+
+<!-- ========== HOME (Light Mode) ========== -->
+<div>
+<div class="phone-label">Home — Light Mode</div>
+<div class="phone">
+<div class="screen">
+
+<!-- Header -->
+<div class="hdr">
+  <div class="logo-wrap">
+    <div class="logo"><img src="golfin-logo.png" alt="GOLFIN" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:700;color:#222&quot;>GOLF<span style=&quot;color:#2DB87A&quot;>IN</span></div>'"></div>
+    <div class="hdr-badge">GPS</div>
+  </div>
+  <div class="hdr-icons"><div class="ic">🔔</div><div class="ic">🔍</div></div>
+</div>
+
+<!-- Profile Hero Card (green gradient) -->
+<div class="hero">
+  <div class="hero-top">
+    <div class="av pk">M</div>
+    <div><div class="nm">Misaki</div><div class="sub">HC 22.1 · 1,240 フォロワー</div></div>
+  </div>
+  <div class="stats">
+    <div class="st"><div class="sn green">2,480</div><div class="sl">ポイント</div></div>
+    <div class="st"><div class="sn">92</div><div class="sl">ベスト</div></div>
+    <div class="st"><div class="sn gold">80%</div><div class="sl">Trust</div></div>
+    <div class="st"><div class="sn pink">Lv.8</div><div class="sl">アバター</div></div>
+  </div>
+</div>
+
+<!-- Flow Strip -->
+<div class="flow">
+  <div class="fi"><div class="fd">📸</div><div class="ft">スクショ<br>を貼る</div></div>
+  <div class="fa">›</div>
+  <div class="fi"><div class="fd">✨</div><div class="ft">AIが<br>認識</div></div>
+  <div class="fa">›</div>
+  <div class="fi"><div class="fd">📍</div><div class="ft">GPS<br>で証明</div></div>
+  <div class="fa">›</div>
+  <div class="fi"><div class="fd">⭐</div><div class="ft">ポイント<br>GET</div></div>
+</div>
+
+<!-- Action Buttons -->
+<div class="acts">
+  <div class="act"><div class="ai gb">📸</div><div class="al">スクショ</div></div>
+  <div class="act"><div class="ai bb">📍</div><div class="al">チェックイン</div></div>
+  <div class="act"><div class="ai pb">♥</div><div class="al">Vote</div></div>
+  <div class="act"><div class="ai gdb">🎁</div><div class="al">Gift</div></div>
+</div>
+
+<!-- Recent Gift -->
+<div class="sh"><div class="stt">最近のGift</div><div class="stl">すべて見る ›</div></div>
+<div class="gf">
+  <div class="gi"><div class="ga" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div><div class="gn">Yui</div><div class="gac">ギフト受取</div><div class="gam">🎁 x24</div></div>
+  <div class="gi"><div class="ga" style="background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">K</div><div class="gn">Ken</div><div class="gac">ギフト受取</div><div class="gam">🎁 x18</div></div>
+  <div class="gi"><div class="ga" style="background:linear-gradient(135deg,#D4A853,#b48833)">A</div><div class="gn">Aiko</div><div class="gac">ギフト受取</div><div class="gam">🎁 x31</div></div>
+  <div class="gi"><div class="ga" style="background:linear-gradient(135deg,#2DB87A,#1a8a55)">R</div><div class="gn">Rina</div><div class="gac">ギフト受取</div><div class="gam">🎁 x12</div></div>
+</div>
+
+<!-- Live Votes -->
+<div class="sh"><div class="stt">Live Votes</div><div class="stl">すべて見る ›</div></div>
+<div class="vc">
+  <div class="vt"><div class="vq">Misakiは次90切れる？ ⛳</div><div class="vp gold">500 pts</div></div>
+  <div class="vb">
+    <div class="vr"><div class="vrl">Yes</div><div class="vbt"><div class="vbf y" style="width:68%"></div></div><div class="vpc">68%</div></div>
+    <div class="vr"><div class="vrl">No</div><div class="vbt"><div class="vbf n" style="width:32%"></div></div><div class="vpc">32%</div></div>
+  </div>
+  <div class="vm"><div class="vml">47 votes · 残り2日</div><div class="vm-actions"><div class="vm-gift">🎁 Gift</div><div class="vmb">Vote</div></div></div>
+</div>
+<div class="vc">
+  <div class="vt"><div class="vq">Yuiは今月ベスグロ更新する？</div><div class="vp pink">1,200 pts</div></div>
+  <div class="vb">
+    <div class="vr"><div class="vrl">Yes</div><div class="vbt"><div class="vbf y" style="width:55%"></div></div><div class="vpc">55%</div></div>
+    <div class="vr"><div class="vrl">No</div><div class="vbt"><div class="vbf n" style="width:45%"></div></div><div class="vpc">45%</div></div>
+  </div>
+  <div class="vm"><div class="vml">89 votes · 残り5日</div><div class="vm-actions"><div class="vm-gift">🎁 Gift</div><div class="vmb">Vote</div></div></div>
+</div>
+
+<!-- Friends' Rounds -->
+<div class="sh"><div class="stt">フレンドのラウンド</div><div class="stl">すべて見る ›</div></div>
+<div class="rc"><div class="av pk" style="width:42px;height:42px;font-size:14px">Y</div><div class="ri"><div class="rn">Yui</div><div class="rco">軽井沢72ゴルフ</div><div class="rtr">● Trust 100%</div></div><div class="rr"><div class="rs">84</div><div class="rd">(+12)</div><div class="rbst">BEST</div></div></div>
+<div class="rc"><div class="av bl" style="width:42px;height:42px;font-size:14px">T</div><div class="ri"><div class="rn">Taro</div><div class="rco">東京ゴルフ倶楽部</div><div class="rtr">● Trust 80%</div></div><div class="rr"><div class="rs">92</div><div class="rd">(+20)</div><div class="rp">+45 pts</div></div></div>
+<div class="rc"><div class="av gd" style="width:42px;height:42px;font-size:14px">A</div><div class="ri"><div class="rn">Aiko</div><div class="rco">武蔵カントリー</div><div class="rtr">● Trust 80%</div></div><div class="rr"><div class="rs">98</div><div class="rd">(+26)</div><div class="rp">+32 pts</div></div></div>
+
+</div>
+
+<!-- FAB -->
+<div class="fab">📸</div>
+
+<!-- Tab Bar -->
+<div class="tb">
+  <div class="tab on"><div class="ti">🏠</div><div class="tt">Home</div></div>
+  <div class="tab"><div class="ti">⛳</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">🎁</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">♥</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">👤</div><div class="tt">Profile</div></div>
+</div>
+</div>
+</div>
+
+</body>
+</html>
