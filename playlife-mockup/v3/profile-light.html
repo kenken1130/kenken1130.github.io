@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#f0f0f0;display:flex;justify-content:center;gap:24px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:390px;height:844px;background:#fff;border-radius:44px;border:3px solid #e0e0e0;overflow:hidden;position:relative;flex-shrink:0;box-shadow:0 20px 60px rgba(0,0,0,0.12)}
+.phone-label{color:#999;font-size:11px;text-align:center;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:80px}
+.screen::-webkit-scrollbar{display:none}
+
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;
+  --card:#ffffff;
+  --shadow:rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.08) 0px 4px 12px;
+  --shadow-hover:rgba(0,0,0,0.06) 0px 6px 16px;
+  --g:#2DB87A;--gd:#1a8a55;--gs:#E8F5EE;
+  --gold:#D4A853;--golds:#FFF8E8;
+  --pk:#E86B8A;--pks:#FFF0F3;
+  --bl:#5B9EF4;--bls:#EEF4FF;
+  --pp:#9B7AFF;
+  --t1:#222222;--t2:#6a6a6a;--t3:#999999;
+  --bd:rgba(0,0,0,0.08);
+}
+
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:54px 20px 12px}
+.logo-wrap{display:flex;align-items:center;gap:8px}
+.logo img{height:28px}
+.ic{width:36px;height:36px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:14px;cursor:pointer}
+.sh{display:flex;justify-content:space-between;align-items:center;padding:18px 20px 8px}
+.stt{font-size:17px;font-weight:700;color:var(--t1);letter-spacing:-0.2px}
+.stl{font-size:12px;color:var(--g);cursor:pointer;font-weight:500}
+
+/* Profile Hero */
+.ph{margin:8px 16px;background:linear-gradient(135deg,#1e8a55,#0f5a35);border-radius:20px;padding:24px;text-align:center;position:relative;overflow:hidden}
+.ph::after{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.06)}
+.pav{width:68px;height:68px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff;border:3px solid rgba(255,255,255,0.2)}
+.pnm{font-size:20px;font-weight:700;color:#fff;letter-spacing:-0.3px}
+.psb{font-size:12px;color:rgba(255,255,255,0.45);margin-top:3px}
+.pst{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.st{text-align:center}
+.sn{font-size:18px;font-weight:700;color:#fff}
+.sn.green{color:#5DCAA5}.sn.gold{color:#EBC57A}.sn.pink{color:#F5A0B5}
+.sl{font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+
+/* Trust Bar */
+.trust-bar{margin:8px 16px;background:var(--card);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.trust-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.trust-icon{color:var(--g);font-size:16px}
+.trust-label{font-size:13px;font-weight:600;color:var(--g)}
+.trust-track{height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden}
+.trust-fill{height:100%;background:var(--g);border-radius:4px}
+.trust-sub{font-size:11px;color:var(--t3);margin-top:6px}
+
+/* Avatar growth */
+.avatar-hero{margin:8px 16px;background:linear-gradient(135deg,#eef8f3,#f5faf7,#ffffff);border-radius:20px;padding:24px;text-align:center;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.avatar-circle{width:100px;height:100px;border-radius:50%;margin:0 auto 12px;position:relative;display:flex;align-items:center;justify-content:center}
+.avatar-ring{position:absolute;inset:-4px;border-radius:50%;border:3px solid transparent;border-top-color:var(--g);border-right-color:var(--g);animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.avatar-inner{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,var(--g),#1a8a55);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#fff;position:relative;z-index:1}
+.avatar-lv{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;font-size:11px;font-weight:700;padding:2px 12px;border-radius:20px;z-index:2}
+.avatar-name{font-size:20px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.avatar-title{font-size:12px;color:var(--gold);margin-bottom:16px;font-weight:500}
+
+/* Stat bars */
+.stat-bars{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.stat-row{display:flex;align-items:center;gap:8px}
+.stat-icon{font-size:14px;width:24px;text-align:center}
+.stat-name{font-size:12px;color:var(--t2);width:72px;font-weight:500}
+.stat-track{flex:1;height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden;position:relative}
+.stat-fill{height:100%;border-radius:5px}
+.stat-fill.power{background:linear-gradient(90deg,#E24B4A,#F09595)}
+.stat-fill.tech{background:linear-gradient(90deg,#5B9EF4,#85B7EB)}
+.stat-fill.mental{background:linear-gradient(90deg,#9B7AFF,#CECBF6)}
+.stat-val{font-size:13px;font-weight:700;color:var(--t1);width:28px;text-align:right}
+
+/* Next level */
+.next-lv{margin:8px 16px;background:var(--gs);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow)}
+.next-lv-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.next-lv-label{font-size:13px;color:var(--g);font-weight:600}
+.next-lv-target{font-size:12px;color:var(--t3)}
+.next-lv-track{height:10px;background:rgba(255,255,255,0.6);border-radius:5px;overflow:hidden;margin-bottom:6px}
+.next-lv-fill{height:100%;background:linear-gradient(90deg,var(--g),#5DCAA5);border-radius:5px}
+.next-lv-info{font-size:11px;color:var(--t2)}
+.next-lv-info span{color:var(--g);font-weight:600}
+
+/* Quick actions */
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 16px}
+.quick-btn{background:var(--card);border-radius:16px;padding:16px 14px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.quick-btn:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px)}
+.quick-btn-icon{font-size:22px;margin-bottom:6px}
+.quick-btn-title{font-size:13px;font-weight:600;color:var(--t1)}
+.quick-btn-desc{font-size:10px;color:var(--t3);margin-top:2px}
+.quick-btn.highlight{background:var(--gs)}
+.quick-btn.highlight .quick-btn-title{color:var(--g)}
+
+/* Golf Stats */
+.golf-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 16px}
+.golf-stat{background:var(--card);border-radius:14px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+.golf-stat-label{font-size:11px;color:var(--t3)}
+.golf-stat-num{font-size:22px;font-weight:700;margin-top:2px}
+
+/* Gift stats */
+.gift-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 8px}
+.gift-stat{border-radius:14px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+.gift-stat-label{font-size:11px}
+.gift-stat-num{font-size:20px;font-weight:700;margin-top:2px}
+
+/* Recent rounds */
+.rc{margin:6px 16px;background:var(--card);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.rc:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px)}
+.ra{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.ri{flex:1}
+.rn{font-size:13px;font-weight:600;color:var(--t1)}
+.rco{font-size:11px;color:var(--t3);margin-top:2px}
+.rtr{font-size:10px;color:var(--g);margin-top:2px;font-weight:500}
+.rr{text-align:right}
+.rs{font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-0.5px}
+.rd{font-size:11px;color:var(--t3)}
+.rbst{font-size:9px;font-weight:600;color:var(--gold);background:var(--golds);padding:2px 6px;border-radius:6px;display:inline-block;margin-top:2px}
+
+/* Tab Bar */
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0}
+.ti{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);transition:all .2s}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:9px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g);font-weight:600}
+
+.mode-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.mode-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .2s}
+.mode-btn.active{background:var(--g);color:#fff}
+.lang-toggle{position:fixed;top:12px;left:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.lang-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .2s}
+.lang-btn.active{background:var(--g);color:#fff}
+</style>
+</head>
+<body>
+
+<div class="mode-toggle">
+  <button class="mode-btn active">Light</button>
+  <button class="mode-btn">Dark</button>
+</div>
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('ja')">JA</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- ========== PROFILE TAB (Light Mode) ========== -->
+<div>
+<div class="phone-label">Profile -- Light Mode</div>
+<div class="phone"><div class="screen">
+
+<!-- Header -->
+<div class="hdr">
+  <div class="logo-wrap">
+    <div class="logo"><img src="golfin-logo.png" alt="GOLFIN" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:700;color:#222&quot;>GOLF<span style=&quot;color:#2DB87A&quot;>IN</span></div>'"></div>
+  </div>
+  <div class="ic">&#9881;</div>
+</div>
+
+<!-- Profile Hero -->
+<div class="ph">
+  <div class="pav" style="background:linear-gradient(135deg,var(--g),#1a8a55)">K</div>
+  <div class="pnm">Ken</div>
+  <div class="psb">@ken_golf · HC 18.4 · <span class="i18n" data-ja="東京ゴルフ倶楽部" data-en="Tokyo Golf Club">東京ゴルフ倶楽部</span></div>
+  <div class="pst">
+    <div class="st"><div class="sn pink">890</div><div class="sl"><span class="i18n" data-ja="フォロワー" data-en="Followers">フォロワー</span></div></div>
+    <div class="st"><div class="sn">23</div><div class="sl"><span class="i18n" data-ja="ラウンド" data-en="Rounds">ラウンド</span></div></div>
+    <div class="st"><div class="sn gold">Lv.12</div><div class="sl"><span class="i18n" data-ja="アバター" data-en="Avatar">アバター</span></div></div>
+    <div class="st"><div class="sn green">2,480</div><div class="sl"><span class="i18n" data-ja="ポイント" data-en="Points">ポイント</span></div></div>
+  </div>
+</div>
+
+<!-- Trust Level Bar -->
+<div class="trust-bar">
+  <div class="trust-top"><div class="trust-icon">&#9989;</div><div class="trust-label">Trust Level: 80%</div></div>
+  <div class="trust-track"><div class="trust-fill" style="width:80%"></div></div>
+  <div class="trust-sub">Screenshot + GPS verified</div>
+</div>
+
+<!-- Avatar Growth -->
+<div class="avatar-hero">
+  <div class="avatar-circle">
+    <div class="avatar-ring"></div>
+    <div class="avatar-inner">K</div>
+    <div class="avatar-lv">Lv.12</div>
+  </div>
+  <div class="avatar-name">Ken</div>
+  <div class="avatar-title">&#9971; <span class="i18n" data-ja="アマチュアゴルファー" data-en="Amateur golfer">アマチュアゴルファー</span></div>
+
+  <div class="stat-bars">
+    <div class="stat-row">
+      <div class="stat-icon">&#128170;</div>
+      <div class="stat-name"><span class="i18n" data-ja="パワー" data-en="Power">パワー</span></div>
+      <div class="stat-track"><div class="stat-fill power" style="width:72%"></div></div>
+      <div class="stat-val">72</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-icon">&#127919;</div>
+      <div class="stat-name"><span class="i18n" data-ja="テクニック" data-en="Technique">テクニック</span></div>
+      <div class="stat-track"><div class="stat-fill tech" style="width:58%"></div></div>
+      <div class="stat-val">58</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-icon">&#129504;</div>
+      <div class="stat-name"><span class="i18n" data-ja="メンタル" data-en="Mental">メンタル</span></div>
+      <div class="stat-track"><div class="stat-fill mental" style="width:65%"></div></div>
+      <div class="stat-val">65</div>
+    </div>
+  </div>
+</div>
+
+<!-- Next Level -->
+<div class="next-lv">
+  <div class="next-lv-top">
+    <div class="next-lv-label"><span class="i18n" data-ja="次のレベルまで" data-en="Next level">次のレベルまで</span></div>
+    <div class="next-lv-target">Lv.12 → Lv.13</div>
+  </div>
+  <div class="next-lv-track"><div class="next-lv-fill" style="width:65%"></div></div>
+  <div class="next-lv-info"><span class="i18n" data-ja="あと" data-en="">あと</span><span>2<span class="i18n" data-ja="ラウンド" data-en=" rounds">ラウンド</span></span><span class="i18n" data-ja="でレベルアップ" data-en=" to level up">でレベルアップ</span></div>
+</div>
+
+<!-- Quick Actions: Badge Collection + Gift Shop -->
+<div class="quick">
+  <div class="quick-btn highlight">
+    <div class="quick-btn-icon">&#127942;</div>
+    <div class="quick-btn-title"><span class="i18n" data-ja="バッジコレクション" data-en="Badge collection">バッジコレクション</span></div>
+    <div class="quick-btn-desc">8/24 <span class="i18n" data-ja="獲得済み" data-en="earned">獲得済み</span></div>
+  </div>
+  <div class="quick-btn">
+    <div class="quick-btn-icon">&#127873;</div>
+    <div class="quick-btn-title"><span class="i18n" data-ja="ギフトショップ" data-en="Gift shop">ギフトショップ</span></div>
+    <div class="quick-btn-desc"><span class="i18n" data-ja="アイテムを見る" data-en="Browse items">アイテムを見る</span></div>
+  </div>
+</div>
+
+<!-- Golf Stats -->
+<div class="golf-stats">
+  <div class="golf-stat">
+    <div class="golf-stat-label"><span class="i18n" data-ja="ベスト" data-en="Best">ベスト</span></div>
+    <div class="golf-stat-num" style="color:var(--gold)">89</div>
+  </div>
+  <div class="golf-stat">
+    <div class="golf-stat-label"><span class="i18n" data-ja="平均" data-en="Avg">平均</span></div>
+    <div class="golf-stat-num" style="color:var(--t1)">96.3</div>
+  </div>
+  <div class="golf-stat">
+    <div class="golf-stat-label"><span class="i18n" data-ja="平均パット" data-en="Avg putts">平均パット</span></div>
+    <div class="golf-stat-num" style="color:var(--t1)">33.2</div>
+  </div>
+</div>
+
+<!-- Gift Stats -->
+<div class="gift-stats">
+  <div class="gift-stat" style="background:var(--pks)">
+    <div class="gift-stat-label" style="color:var(--pk)"><span class="i18n" data-ja="受取Gift" data-en="Gifts received">受取Gift</span></div>
+    <div class="gift-stat-num" style="color:var(--pk)">1,840 pts</div>
+  </div>
+  <div class="gift-stat" style="background:var(--golds)">
+    <div class="gift-stat-label" style="color:var(--gold)"><span class="i18n" data-ja="贈ったGift" data-en="Gifts sent">贈ったGift</span></div>
+    <div class="gift-stat-num" style="color:var(--gold)">620 pts</div>
+  </div>
+</div>
+
+<!-- Recent Rounds -->
+<div class="sh"><div class="stt"><span class="i18n" data-ja="最近のラウンド" data-en="Recent rounds">最近のラウンド</span></div></div>
+<div class="rc"><div class="ra" style="background:linear-gradient(135deg,var(--g),#1a8a55)">K</div><div class="ri"><div class="rn"><span class="i18n" data-ja="東京ゴルフ倶楽部" data-en="Tokyo Golf Club">東京ゴルフ倶楽部</span></div><div class="rco"><span class="i18n" data-ja="2日前" data-en="2 days ago">2日前</span></div><div class="rtr">&#9679; Trust 80% · +45 pts</div></div><div class="rr"><div class="rs">92</div><div class="rd">(+20)</div></div></div>
+<div class="rc"><div class="ra" style="background:linear-gradient(135deg,var(--g),#1a8a55)">K</div><div class="ri"><div class="rn"><span class="i18n" data-ja="武蔵カントリー" data-en="Musashi Country">武蔵カントリー</span></div><div class="rco"><span class="i18n" data-ja="2週間前" data-en="2 weeks ago">2週間前</span></div><div class="rtr">&#9679; Trust 100% · +52 pts</div></div><div class="rr"><div class="rs">89</div><div class="rd">(+17)</div><div class="rbst">BEST</div></div></div>
+
+</div>
+
+<!-- Tab Bar -->
+<div class="tb">
+  <div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div>
+  <div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div>
+  <div class="tab on"><div class="ti">&#128100;</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+
+<script>
+function setLang(lang){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===lang.toUpperCase()));document.querySelectorAll('.i18n').forEach(el=>{const t=el.getAttribute('data-'+lang);if(t)el.innerHTML=t})}
+</script>
+</body>
+</html>

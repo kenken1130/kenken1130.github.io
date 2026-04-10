@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#f0f0f0;display:flex;justify-content:center;gap:24px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:390px;height:844px;background:#fff;border-radius:44px;border:3px solid #e0e0e0;overflow:hidden;position:relative;flex-shrink:0;box-shadow:0 20px 60px rgba(0,0,0,0.12)}
+.phone-label{color:#999;font-size:11px;text-align:center;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:80px}
+.screen::-webkit-scrollbar{display:none}
+
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;
+  --card:#ffffff;
+  --shadow:rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.08) 0px 4px 12px;
+  --shadow-hover:rgba(0,0,0,0.06) 0px 6px 16px;
+  --g:#2DB87A;--gd:#1a8a55;--gs:#E8F5EE;
+  --gold:#D4A853;--golds:#FFF8E8;
+  --pk:#E86B8A;--pks:#FFF0F3;
+  --bl:#5B9EF4;--bls:#EEF4FF;
+  --pp:#9B7AFF;
+  --t1:#222222;--t2:#6a6a6a;--t3:#999999;
+  --bd:rgba(0,0,0,0.08);
+}
+
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:54px 20px 12px}
+.logo-wrap{display:flex;align-items:center;gap:8px}
+.logo img{height:28px}
+.hdr-icons{display:flex;gap:8px}
+.ic{width:36px;height:36px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:14px;cursor:pointer}
+.sh{display:flex;justify-content:space-between;align-items:center;padding:18px 20px 8px}
+.stt{font-size:17px;font-weight:700;color:var(--t1);letter-spacing:-0.2px}
+.stl{font-size:12px;color:var(--g);cursor:pointer;font-weight:500}
+
+/* Gift Hero */
+.gth{margin:8px 16px;background:linear-gradient(135deg,#f8e0e8,#fce8ee,#fff0f3);border-radius:20px;padding:20px;text-align:center;box-shadow:var(--shadow)}
+.gtt{font-family:'Playfair Display',serif;font-size:20px;color:var(--pk);margin-bottom:3px;font-weight:700}
+.gts{font-size:12px;color:rgba(232,107,138,0.6)}
+.gta{font-size:28px;font-weight:700;color:var(--t1);margin-top:12px}
+.gtl{font-size:11px;color:var(--t3);margin-top:2px}
+
+/* Supporter list */
+.gli{margin:6px 16px;background:var(--card);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);transition:all .2s}
+.gli:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px)}
+.glr{font-size:14px;font-weight:700;color:var(--t3);width:20px;text-align:center}
+.glr.top{color:var(--gold)}
+.ra{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.glni{flex:1}
+.glnn{font-size:13px;font-weight:600;color:var(--t1)}
+.glnf{font-size:10px;color:var(--t3)}
+.gla{font-size:14px;font-weight:700;color:var(--pk)}
+.glb{font-size:11px;font-weight:600;color:var(--pk);background:var(--pks);padding:5px 14px;border-radius:20px;cursor:pointer;transition:background .2s}
+.glb:hover{background:#ffe0e8}
+
+/* Gift items */
+.sgb{margin:12px 16px;padding:16px;background:var(--card);border-radius:16px;text-align:center;box-shadow:var(--shadow)}
+.sgbt{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.sgbs{font-size:12px;color:var(--t3);margin-bottom:12px}
+.sgbg{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.sgbi{padding:10px 18px;border-radius:14px;font-size:13px;font-weight:600;cursor:pointer;transition:transform .15s;box-shadow:var(--shadow)}
+.sgbi:hover{transform:scale(1.05)}
+.sgbi.gd{background:var(--golds);color:var(--gold)}
+.sgbi.pk{background:var(--pks);color:var(--pk)}
+.sgbi.g{background:var(--gs);color:var(--g)}
+
+/* Tab Bar */
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0}
+.ti{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);transition:all .2s}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:9px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g);font-weight:600}
+
+.mode-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.mode-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .2s}
+.mode-btn.active{background:var(--g);color:#fff}
+
+.lang-toggle{position:fixed;top:12px;left:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.lang-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .2s}
+.lang-btn.active{background:var(--g);color:#fff}
+</style>
+</head>
+<body>
+
+<div class="mode-toggle">
+  <button class="mode-btn active">Light</button>
+  <button class="mode-btn">Dark</button>
+</div>
+
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('ja')">JA</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- ========== GIFT TAB (Light Mode) ========== -->
+<div>
+<div class="phone-label">Gift -- Light Mode</div>
+<div class="phone"><div class="screen">
+
+<!-- Header -->
+<div class="hdr">
+  <div class="logo-wrap">
+    <div class="logo"><img src="golfin-logo.png" alt="GOLFIN" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:700;color:#222&quot;>GOLF<span style=&quot;color:#2DB87A&quot;>IN</span></div>'"></div>
+  </div>
+  <div class="hdr-icons"><div class="ic">&#127873;</div></div>
+</div>
+
+<!-- Gift Hero -->
+<div class="gth">
+  <div class="gtt"><span class="i18n" data-ja="受け取ったGift" data-en="Gifts received">受け取ったGift</span></div>
+  <div class="gts"><span class="i18n" data-ja="89人のサポーターから" data-en="from 89 supporters">89人のサポーターから</span></div>
+  <div class="gta">4,820 pts</div>
+  <div class="gtl"><span class="i18n" data-ja="合計ギフト収益" data-en="total gift earnings">合計ギフト収益</span></div>
+</div>
+
+<!-- Top Supporters -->
+<div class="sh"><div class="stt"><span class="i18n" data-ja="トップサポーター" data-en="Top supporters">トップサポーター</span></div><div class="stl"><span class="i18n" data-ja="すべて見る >" data-en="See all >">すべて見る ></span></div></div>
+<div class="gli"><div class="glr top">1</div><div class="ra" style="background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">T</div><div class="glni"><div class="glnn">Taro</div><div class="glnf">2,340 followers</div></div><div class="gla">1,200 pts</div></div>
+<div class="gli"><div class="glr top">2</div><div class="ra" style="background:linear-gradient(135deg,#D4A853,#b48833)">K</div><div class="glni"><div class="glnn">Ken</div><div class="glnf">890 followers</div></div><div class="gla">980 pts</div></div>
+<div class="gli"><div class="glr top">3</div><div class="ra" style="background:linear-gradient(135deg,#2DB87A,#1a8a55)">H</div><div class="glni"><div class="glnn">Hiro</div><div class="glnf">560 followers</div></div><div class="gla">720 pts</div></div>
+
+<!-- Popular Golfers -->
+<div class="sh"><div class="stt"><span class="i18n" data-ja="人気ゴルファー" data-en="Popular golfers">人気ゴルファー</span></div><div class="stl"><span class="i18n" data-ja="すべて見る >" data-en="See all >">すべて見る ></span></div></div>
+<div class="gli"><div class="glr top">1</div><div class="ra" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div><div class="glni"><div class="glnn">Yui</div><div class="glnf">3,120 followers</div></div><div class="glb"><span class="i18n" data-ja="&#127873; Giftを贈る" data-en="&#127873; Send gift">&#127873; Giftを贈る</span></div></div>
+<div class="gli"><div class="glr top">2</div><div class="ra" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">M</div><div class="glni"><div class="glnn">Misaki</div><div class="glnf">1,240 followers</div></div><div class="glb"><span class="i18n" data-ja="&#127873; Giftを贈る" data-en="&#127873; Send gift">&#127873; Giftを贈る</span></div></div>
+<div class="gli"><div class="glr">3</div><div class="ra" style="background:linear-gradient(135deg,#D4A853,#b48833)">A</div><div class="glni"><div class="glnn">Aiko</div><div class="glnf">980 followers</div></div><div class="glb"><span class="i18n" data-ja="&#127873; Giftを贈る" data-en="&#127873; Send gift">&#127873; Giftを贈る</span></div></div>
+
+<!-- Gift Tiers -->
+<div class="sgb">
+  <div class="sgbt"><span class="i18n" data-ja="Giftアイテムを購入" data-en="Buy gift items">Giftアイテムを購入</span></div>
+  <div class="sgbs"><span class="i18n" data-ja="お気に入りのゴルファーを応援しよう" data-en="Support your favorite golfer">お気に入りのゴルファーを応援しよう</span></div>
+  <div class="sgbg">
+    <div class="sgbi gd">&#127873; 50 pts</div>
+    <div class="sgbi pk">&#127873; 100 pts</div>
+    <div class="sgbi g">&#127873; 500 pts</div>
+  </div>
+</div>
+
+</div>
+
+<!-- Tab Bar -->
+<div class="tb">
+  <div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div>
+  <div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div>
+  <div class="tab on"><div class="ti">&#127873;</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">&#9829;</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">&#128100;</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+
+<script>
+function setLang(lang){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===lang.toUpperCase()));document.querySelectorAll('.i18n').forEach(el=>{const t=el.getAttribute('data-'+lang);if(t)el.innerHTML=t})}
+</script>
+</body>
+</html>

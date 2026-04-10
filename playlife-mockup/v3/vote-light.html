@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#f0f0f0;display:flex;justify-content:center;gap:24px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:390px;height:844px;background:#fff;border-radius:44px;border:3px solid #e0e0e0;overflow:hidden;position:relative;flex-shrink:0;box-shadow:0 20px 60px rgba(0,0,0,0.12)}
+.phone-label{color:#999;font-size:11px;text-align:center;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:80px}
+.screen::-webkit-scrollbar{display:none}
+
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;
+  --card:#ffffff;
+  --shadow:rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.08) 0px 4px 12px;
+  --shadow-hover:rgba(0,0,0,0.06) 0px 6px 16px;
+  --g:#2DB87A;--gd:#1a8a55;--gs:#E8F5EE;
+  --gold:#D4A853;--golds:#FFF8E8;
+  --pk:#E86B8A;--pks:#FFF0F3;
+  --bl:#5B9EF4;--bls:#EEF4FF;
+  --pp:#9B7AFF;--pps:#F3EEFF;
+  --t1:#222222;--t2:#6a6a6a;--t3:#999999;
+  --bd:rgba(0,0,0,0.08);
+}
+
+/* Header */
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:54px 20px 12px}
+.logo-wrap{display:flex;align-items:center;gap:8px}
+.logo img{height:28px}
+.hdr-badge{font-size:10px;font-weight:600;color:var(--g);border:1.5px solid var(--g);padding:3px 10px;border-radius:20px;letter-spacing:1px}
+.hdr-icons{display:flex;gap:8px}
+.ic{width:36px;height:36px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:14px;cursor:pointer;transition:all .2s}
+.ic:hover{background:#eee}
+.create-btn{width:auto;padding:0 14px;border-radius:20px;background:var(--gs);color:var(--g);border-color:transparent;font-weight:600;font-size:11px;height:36px;display:flex;align-items:center;cursor:pointer}
+
+/* Stories */
+.stories{display:flex;gap:10px;padding:6px 16px;overflow-x:auto;scrollbar-width:none}
+.stories::-webkit-scrollbar{display:none}
+.story{flex-shrink:0;text-align:center;cursor:pointer}
+.story-ring{width:52px;height:52px;border-radius:50%;padding:2px;background:linear-gradient(135deg,var(--g),var(--gold));display:flex;align-items:center;justify-content:center}
+.story-ring.new{background:linear-gradient(135deg,var(--pk),var(--gold))}
+.story-av{width:46px;height:46px;border-radius:50%;background:#eee;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff}
+.story-name{font-size:9px;color:var(--t2);margin-top:3px;max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.story-add{width:52px;height:52px;border-radius:50%;border:1.5px dashed var(--t3);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--t3)}
+
+/* Filter pills */
+.fp{display:flex;gap:6px;padding:6px 16px}
+.pill{font-size:11px;padding:6px 14px;border-radius:20px;color:var(--t2);cursor:pointer;background:var(--card);box-shadow:var(--shadow);font-weight:500;transition:all .2s}
+.pill.on{background:var(--g);color:#fff;box-shadow:0 2px 8px rgba(45,184,122,0.25)}
+
+/* Photo vote card */
+.pvc{margin:8px 16px 10px;background:var(--card);border-radius:16px;overflow:hidden;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.pvc:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px)}
+.pvc-img{width:100%;height:180px;background-size:cover;background-position:center;position:relative}
+.pvc-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,rgba(0,0,0,.6))}
+.pvc-overlay{position:absolute;bottom:8px;left:12px;right:12px;z-index:1}
+.pvc-user{display:flex;align-items:center;gap:6px}
+.pvc-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;border:1.5px solid rgba(255,255,255,.3)}
+.pvc-name{font-size:11px;font-weight:600;color:#fff}
+.pvc-time{font-size:9px;color:rgba(255,255,255,.5)}
+.pvc-body{padding:14px 16px}
+.pvc-q{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:10px;line-height:1.4;letter-spacing:-0.2px}
+.pvc-prize{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;margin-left:6px;white-space:nowrap;display:inline-block}
+.pvc-prize.gd{background:var(--golds);color:var(--gold)}
+.pvc-prize.pk{background:var(--pks);color:var(--pk)}
+
+/* Vote bars */
+.vb{margin-bottom:8px}
+.vr{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.vrl{font-size:12px;color:var(--t2);width:28px;font-weight:500}
+.vbt{flex:1;height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden}
+.vbf{height:100%;border-radius:3px}
+.vbf.y{background:var(--g)}.vbf.n{background:var(--bl)}
+.vpc{font-size:12px;font-weight:600;color:var(--t2);width:32px;text-align:right}
+
+/* Vote meta */
+.vm{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.vml{font-size:11px;color:var(--t3)}
+.vm-actions{display:flex;gap:6px}
+.vmb{font-size:11px;font-weight:600;color:var(--g);background:var(--gs);padding:5px 14px;border-radius:20px;cursor:pointer;transition:background .2s}
+.vmb:hover{background:#d0f0e0}
+.vm-gift{font-size:11px;font-weight:600;color:var(--pk);background:var(--pks);padding:5px 14px;border-radius:20px;cursor:pointer}
+
+/* Text-only vote */
+.tvc{margin:6px 16px 8px;background:var(--card);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.tvc:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px)}
+.tvc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.tvc-q{font-size:14px;font-weight:600;color:var(--t1);flex:1;line-height:1.4}
+
+/* Multi choice */
+.mc-opts{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.mc-opt{font-size:10px;padding:4px 10px;border-radius:10px;font-weight:500}
+
+/* FAB */
+.fab{position:absolute;bottom:88px;right:16px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--g),#1a8a55);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(45,184,122,0.35);transition:transform .2s;z-index:10}
+.fab:hover{transform:scale(1.08)}
+
+/* Tab Bar */
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0}
+.ti{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);transition:all .2s}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:9px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g);font-weight:600}
+
+/* Mode toggle */
+.mode-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.mode-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .2s}
+.mode-btn.active{background:var(--g);color:#fff}
+
+/* Lang toggle */
+.lang-toggle{position:fixed;top:12px;left:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.lang-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .2s}
+.lang-btn.active{background:var(--g);color:#fff}
+</style>
+</head>
+<body>
+
+<div class="mode-toggle">
+  <button class="mode-btn active">Light</button>
+  <button class="mode-btn">Dark</button>
+</div>
+
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('ja')">JA</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+</div>
+
+<!-- ========== VOTE TAB (Photo-based) ========== -->
+<div>
+<div class="phone-label">Vote (Photo) -- Light Mode</div>
+<div class="phone"><div class="screen">
+
+<!-- Header -->
+<div class="hdr">
+  <div class="logo-wrap">
+    <div class="logo"><img src="golfin-logo.png" alt="GOLFIN" onerror="this.outerHTML='<div style=&quot;font-size:22px;font-weight:700;color:#222&quot;>GOLF<span style=&quot;color:#2DB87A&quot;>IN</span></div>'"></div>
+    <div class="hdr-badge">GOLF</div>
+  </div>
+  <div class="hdr-icons">
+    <div class="create-btn"><span class="i18n" data-ja="+ 投票を作成" data-en="+ Create vote">+ 投票を作成</span></div>
+  </div>
+</div>
+
+<!-- Stories row -->
+<div class="stories">
+  <div class="story"><div class="story-add">+</div><div class="story-name"><span class="i18n" data-ja="新規" data-en="New">新規</span></div></div>
+  <div class="story"><div class="story-ring new"><div class="story-av" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">M</div></div><div class="story-name">Misaki</div></div>
+  <div class="story"><div class="story-ring"><div class="story-av" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div></div><div class="story-name">Yui</div></div>
+  <div class="story"><div class="story-ring"><div class="story-av" style="background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">T</div></div><div class="story-name">Taro</div></div>
+  <div class="story"><div class="story-ring"><div class="story-av" style="background:linear-gradient(135deg,#D4A853,#b48833)">A</div></div><div class="story-name">Aiko</div></div>
+  <div class="story"><div class="story-ring"><div class="story-av" style="background:linear-gradient(135deg,#2DB87A,#1a8a55)">K</div></div><div class="story-name">Ken</div></div>
+  <div class="story"><div class="story-ring"><div class="story-av" style="background:linear-gradient(135deg,#9B7AFF,#7b5adf)">R</div></div><div class="story-name">Rina</div></div>
+</div>
+
+<!-- Filter pills -->
+<div class="fp">
+  <div class="pill on"><span class="i18n" data-ja="トレンド" data-en="Trending">トレンド</span></div>
+  <div class="pill"><span class="i18n" data-ja="フレンド" data-en="Friends">フレンド</span></div>
+  <div class="pill"><span class="i18n" data-ja="パブリック" data-en="Public">パブリック</span></div>
+  <div class="pill"><span class="i18n" data-ja="自分の" data-en="Mine">自分の</span></div>
+</div>
+
+<!-- Photo Vote 1: Course -->
+<div class="pvc">
+  <div class="pvc-img" style="background-image:url('https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=600&q=80')">
+    <div class="pvc-overlay">
+      <div class="pvc-user">
+        <div class="pvc-av" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">M</div>
+        <div class="pvc-name">Misaki</div>
+        <div class="pvc-time">2h ago</div>
+      </div>
+    </div>
+  </div>
+  <div class="pvc-body">
+    <div class="pvc-q"><span class="i18n" data-ja="今日ここでラウンド！90切れると思う？" data-en="Playing here today! Think I can break 90?">今日ここでラウンド！90切れると思う？</span> <span class="pvc-prize gd">500 pts</span></div>
+    <div class="vb">
+      <div class="vr"><div class="vrl">Yes</div><div class="vbt"><div class="vbf y" style="width:68%"></div></div><div class="vpc">68%</div></div>
+      <div class="vr"><div class="vrl">No</div><div class="vbt"><div class="vbf n" style="width:32%"></div></div><div class="vpc">32%</div></div>
+    </div>
+    <div class="vm"><div class="vml">47 votes · <span class="i18n" data-ja="残り2日" data-en="2 days left">残り2日</span></div><div class="vm-actions"><div class="vm-gift">&#127873; Gift</div><div class="vmb">Vote</div></div></div>
+  </div>
+</div>
+
+<!-- Photo Vote 2: Outfit -->
+<div class="pvc">
+  <div class="pvc-img" style="background-image:url('https://images.unsplash.com/photo-1593111774240-d529f12cf4bb?w=600&q=80');height:200px">
+    <div class="pvc-overlay">
+      <div class="pvc-user">
+        <div class="pvc-av" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div>
+        <div class="pvc-name">Yui</div>
+        <div class="pvc-time">5h ago</div>
+      </div>
+    </div>
+  </div>
+  <div class="pvc-body">
+    <div class="pvc-q"><span class="i18n" data-ja="今日のゴルフコーデ！どう思う？ &#128150;" data-en="Today's golf outfit! What do you think? &#128150;">今日のゴルフコーデ！どう思う？ &#128150;</span> <span class="pvc-prize pk">300 pts</span></div>
+    <div class="vb">
+      <div class="vr"><div class="vrl" style="width:36px">&#128149;</div><div class="vbt"><div class="vbf" style="width:82%;background:var(--pk)"></div></div><div class="vpc">82%</div></div>
+      <div class="vr"><div class="vrl" style="width:36px">&#128078;</div><div class="vbt"><div class="vbf" style="width:18%;background:#ccc"></div></div><div class="vpc">18%</div></div>
+    </div>
+    <div class="vm"><div class="vml">234 votes · <span class="i18n" data-ja="残り1日" data-en="1 day left">残り1日</span></div><div class="vm-actions"><div class="vm-gift">&#127873; Gift</div><div class="vmb">Vote</div></div></div>
+  </div>
+</div>
+
+<!-- Text Vote (public, no photo) -->
+<div class="tvc">
+  <div class="tvc-top"><div class="tvc-q"><span class="i18n" data-ja="HC15が太平洋クラブで80台出せる？" data-en="Can a HC15 break 80 at Taiheiyo Club?">HC15が太平洋クラブで80台出せる？</span></div><div class="pvc-prize pk" style="margin-left:8px">2,000 pts</div></div>
+  <div class="vb">
+    <div class="vr"><div class="vrl">Yes</div><div class="vbt"><div class="vbf y" style="width:42%"></div></div><div class="vpc">42%</div></div>
+    <div class="vr"><div class="vrl">No</div><div class="vbt"><div class="vbf n" style="width:58%"></div></div><div class="vpc">58%</div></div>
+  </div>
+  <div class="vm"><div class="vml">256 votes · <span class="i18n" data-ja="残り5日" data-en="5 days left">残り5日</span></div><div class="vmb">Vote</div></div>
+</div>
+
+<!-- Photo Vote 3: Lunch -->
+<div class="pvc">
+  <div class="pvc-img" style="background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80');height:150px">
+    <div class="pvc-overlay">
+      <div class="pvc-user">
+        <div class="pvc-av" style="background:linear-gradient(135deg,#D4A853,#b48833)">A</div>
+        <div class="pvc-name">Aiko</div>
+        <div class="pvc-time">1d ago</div>
+      </div>
+    </div>
+  </div>
+  <div class="pvc-body">
+    <div class="pvc-q"><span class="i18n" data-ja="ゴルフ場のランチ&#127836; これで正解？" data-en="Clubhouse lunch &#127836; Good choice?">ゴルフ場のランチ&#127836; これで正解？</span> <span class="pvc-prize gd">100 pts</span></div>
+    <div class="vb">
+      <div class="vr"><div class="vrl">&#128077;</div><div class="vbt"><div class="vbf y" style="width:91%"></div></div><div class="vpc">91%</div></div>
+      <div class="vr"><div class="vrl">&#128078;</div><div class="vbt"><div class="vbf n" style="width:9%"></div></div><div class="vpc">9%</div></div>
+    </div>
+    <div class="vm"><div class="vml">89 votes · <span class="i18n" data-ja="残り3日" data-en="3 days left">残り3日</span></div><div class="vm-actions"><div class="vm-gift">&#127873; Gift</div><div class="vmb">Vote</div></div></div>
+  </div>
+</div>
+
+<!-- Multi choice vote -->
+<div class="tvc">
+  <div class="tvc-top"><div class="tvc-q"><span class="i18n" data-ja="今週末、東京エリア最高スコアは？" data-en="Best score in Tokyo this weekend?">今週末、東京エリア最高スコアは？</span></div><div class="pvc-prize pk" style="margin-left:8px">5,000 pts</div></div>
+  <div class="mc-opts">
+    <div class="mc-opt" style="background:var(--gs);color:var(--g)">Misaki 34%</div>
+    <div class="mc-opt" style="background:var(--bls);color:var(--bl)">Yui 28%</div>
+    <div class="mc-opt" style="background:var(--pks);color:var(--pk)">Taro 22%</div>
+    <div class="mc-opt" style="background:#f0f0f0;color:var(--t3)">Other 16%</div>
+  </div>
+  <div class="vm"><div class="vml">312 votes · <span class="i18n" data-ja="残り3日" data-en="3 days left">残り3日</span></div><div class="vmb">Vote</div></div>
+</div>
+
+</div>
+
+<!-- FAB -->
+<div class="fab">&#128247;</div>
+
+<!-- Tab Bar -->
+<div class="tb">
+  <div class="tab"><div class="ti">&#127968;</div><div class="tt">Home</div></div>
+  <div class="tab"><div class="ti">&#9971;</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">&#127873;</div><div class="tt">Gift</div></div>
+  <div class="tab on"><div class="ti">&#9829;</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">&#128100;</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+
+<script>
+function setLang(lang){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===lang.toUpperCase()));document.querySelectorAll('.i18n').forEach(el=>{const t=el.getAttribute('data-'+lang);if(t)el.innerHTML=t})}
+</script>
+</body>
+</html>
