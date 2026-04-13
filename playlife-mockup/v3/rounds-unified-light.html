@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#f0f0f0;display:flex;justify-content:center;gap:24px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:390px;height:844px;background:#fff;border-radius:44px;border:3px solid #e0e0e0;overflow:hidden;position:relative;flex-shrink:0;box-shadow:0 20px 60px rgba(0,0,0,0.12)}
+.phone-label{color:#999;font-size:11px;text-align:center;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:80px;position:relative}
+.screen::-webkit-scrollbar{display:none}
+
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;
+  --card:#ffffff;
+  --shadow:rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.08) 0px 4px 12px;
+  --shadow-hover:rgba(0,0,0,0.06) 0px 6px 16px;
+  --g:#2DB87A;--gd:#1a8a55;--gs:#E8F5EE;
+  --gold:#D4A853;--golds:#FFF8E8;
+  --pk:#E86B8A;--pks:#FFF0F3;
+  --bl:#5B9EF4;--bls:#EEF4FF;
+  --or:#F29B4F;--ors:#FFF1E6;
+  --t1:#222222;--t2:#6a6a6a;--t3:#999999;
+  --bd:rgba(0,0,0,0.08);
+}
+
+/* ========== Shared ========== */
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:54px 20px 12px}
+.htitle{display:flex;align-items:center;gap:8px}
+.htitle .ttl{font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-0.5px}
+.gps-badge{font-size:10px;font-weight:600;color:var(--g);background:var(--gs);padding:5px 12px;border-radius:20px;display:flex;align-items:center;gap:5px}
+.gps-dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+
+.cats{display:flex;gap:8px;padding:0 16px 10px;overflow-x:auto;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex-shrink:0;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .2s;display:flex;align-items:center;gap:6px}
+.cat.on{background:var(--g);color:#fff}
+
+/* Map */
+.map-wrap{margin:6px 16px 0;border-radius:18px;overflow:hidden;position:relative;box-shadow:var(--shadow);height:260px}
+.map-wrap.short{height:200px}
+.map{width:100%;height:100%;background:#e5ecd6;background-image:
+  linear-gradient(135deg,#d9e6c5 0%,#e5ecd6 45%,#eef1d8 100%),
+  radial-gradient(circle at 30% 40%,#c5daa0 0,transparent 50%),
+  radial-gradient(circle at 70% 65%,#b5d08a 0,transparent 45%);
+  background-blend-mode:multiply;position:relative}
+.map::before{content:'';position:absolute;inset:0;background-image:
+  linear-gradient(#c5c5c540 1px,transparent 1px),
+  linear-gradient(90deg,#c5c5c540 1px,transparent 1px);
+  background-size:44px 44px;opacity:0.35}
+.road{position:absolute;background:#fff;box-shadow:0 0 0 1px #d9d9d9}
+.road.h{height:4px;left:0;right:0}
+.road.v{width:4px;top:0;bottom:0}
+.mk{position:absolute;width:30px;height:38px;transform:translate(-50%,-100%);cursor:pointer;z-index:2}
+.mk .pin{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:700;box-shadow:0 3px 10px rgba(0,0,0,0.25);border:2.5px solid #fff}
+.mk .tail{width:10px;height:10px;background:inherit;position:absolute;left:50%;bottom:-3px;transform:translateX(-50%) rotate(45deg);z-index:-1}
+.mk.partner .pin{background:var(--g)}
+.mk.listed .pin{background:#7b9b8a}
+.mk.food .pin{background:var(--or)}
+.mk.active .pin{background:var(--g);animation:bigpulse 2s infinite}
+@keyframes bigpulse{0%{box-shadow:0 0 0 0 rgba(45,184,122,0.5)}70%{box-shadow:0 0 0 18px rgba(45,184,122,0)}100%{box-shadow:0 0 0 0 rgba(45,184,122,0)}}
+.mk.me{width:22px;height:22px;transform:translate(-50%,-50%)}
+.mk.me .pin{width:22px;height:22px;background:var(--bl);border:3px solid #fff;animation:pulse2 2s infinite}
+.mk.me .tail{display:none}
+@keyframes pulse2{0%{box-shadow:0 0 0 0 rgba(91,158,244,0.5)}70%{box-shadow:0 0 0 14px rgba(91,158,244,0)}100%{box-shadow:0 0 0 0 rgba(91,158,244,0)}}
+.mk .label{position:absolute;top:36px;left:50%;transform:translateX(-50%);background:#fff;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600;color:var(--t1);white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.12);border:1px solid var(--bd)}
+.map-ctrls{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:8px;z-index:3}
+.mc{width:36px;height:36px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);font-size:14px;color:var(--t2)}
+
+/* Active Round Card (above map) */
+.round-card{margin:8px 16px;background:linear-gradient(135deg,#1e8a55,#0f5a35);border-radius:18px;padding:16px;color:#fff;position:relative;overflow:hidden}
+.round-card::after{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.08)}
+.rc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;position:relative;z-index:2}
+.rc-status{font-size:9px;font-weight:700;letter-spacing:1.5px;background:rgba(255,255,255,0.22);padding:4px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:5px}
+.rc-status .d{width:5px;height:5px;border-radius:50%;background:#fff;animation:pulse 1.6s ease-in-out infinite}
+.rc-time{font-size:11px;color:rgba(255,255,255,0.75);font-weight:500;letter-spacing:-0.1px}
+.rc-name{font-size:20px;font-weight:700;letter-spacing:-0.4px;margin-bottom:2px;position:relative;z-index:2}
+.rc-sub{font-size:11px;color:rgba(255,255,255,0.65);position:relative;z-index:2}
+.rc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;position:relative;z-index:2}
+.rc-st{background:rgba(255,255,255,0.1);border-radius:10px;padding:8px 4px;text-align:center}
+.rc-sv{font-size:16px;font-weight:700;letter-spacing:-0.3px}
+.rc-sv.gold{color:#EBC57A}
+.rc-sl{font-size:9px;color:rgba(255,255,255,0.5);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+.rc-actions{display:flex;gap:8px;margin-top:14px;position:relative;z-index:2}
+.rc-btn{flex:1;background:rgba(255,255,255,0.2);color:#fff;padding:10px;border-radius:12px;text-align:center;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.rc-btn:hover{background:rgba(255,255,255,0.3)}
+.rc-btn.primary{background:#fff;color:var(--gd)}
+.rc-btn.end{background:rgba(255,255,255,0.15);color:#FFB3B3}
+
+/* Sort + legend */
+.sortbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 6px}
+.sortbar .stt{font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-0.2px}
+.sortbar .sort{font-size:11px;color:var(--t2);cursor:pointer;font-weight:500}
+.legend{display:flex;gap:12px;padding:0 20px 4px;flex-wrap:wrap}
+.lg{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);font-weight:500}
+.lg .dot{width:8px;height:8px;border-radius:50%}
+.lg .dot.partner{background:var(--g)}
+.lg .dot.listed{background:#7b9b8a}
+.lg .dot.food{background:var(--or)}
+
+/* Spot */
+.sp{margin:6px 16px;background:var(--card);border-radius:16px;padding:12px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.sp:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px)}
+.sp-top{display:flex;gap:12px}
+.sp-img{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#c5daa0,#8fb36e);flex-shrink:0;position:relative;overflow:hidden}
+.sp-img.food{background:linear-gradient(135deg,#f0bb8a,#d48b4b)}
+.sp-img .tag{position:absolute;top:4px;left:4px;background:rgba(0,0,0,0.5);color:#fff;font-size:9px;font-weight:600;padding:2px 6px;border-radius:6px}
+.sp-body{flex:1;min-width:0}
+.sp-head{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.sp-name{font-size:13px;font-weight:700;color:var(--t1);letter-spacing:-0.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.sp-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;flex-shrink:0}
+.sp-badge.partner{background:var(--gs);color:var(--g)}
+.sp-meta{font-size:10px;color:var(--t3);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font-size:9px;font-weight:600;color:var(--t2);background:var(--bg2);padding:2px 7px;border-radius:8px}
+.sp-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--bd)}
+.sp-dist{font-size:11px;color:var(--t3);font-weight:500}
+.sp-dist .d{color:var(--g);font-weight:700}
+.sp-dist.near .d{color:var(--pk)}
+.sp-actions{display:flex;gap:6px}
+.sp-btn{font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;cursor:pointer}
+.sp-btn.checkin{background:var(--g);color:#fff}
+.sp-btn.checkin.off{background:var(--bg2);color:var(--t3)}
+.sp-btn.detail{background:var(--gs);color:var(--g)}
+.sp-btn.food{background:var(--ors);color:var(--or)}
+
+/* Modal */
+.bg-dim{position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:5}
+.modal{position:absolute;left:16px;right:16px;top:50%;transform:translateY(-50%);background:#fff;border-radius:24px;padding:26px 22px 18px;box-shadow:0 20px 60px rgba(0,0,0,0.25);z-index:10}
+.m-icon-wrap{display:flex;justify-content:center;margin-bottom:12px}
+.m-icon{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--gs),#c5eddb);display:flex;align-items:center;justify-content:center;font-size:26px}
+.m-title{font-size:17px;font-weight:700;color:var(--t1);text-align:center;letter-spacing:-0.3px;margin-bottom:4px}
+.m-sub{font-size:12px;color:var(--t3);text-align:center;margin-bottom:16px}
+
+.summary-card{background:var(--bg2);border-radius:14px;padding:14px;margin-bottom:14px}
+.summ-head{font-size:12px;color:var(--t3);margin-bottom:8px;font-weight:500}
+.summ-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.summ-st{text-align:center}
+.summ-sv{font-size:17px;font-weight:700;color:var(--t1);letter-spacing:-0.3px}
+.summ-sv.gold{color:var(--gold)}
+.summ-sv.green{color:var(--g)}
+.summ-sl{font-size:9px;color:var(--t3);margin-top:2px;text-transform:uppercase;letter-spacing:0.4px}
+
+.m-actions{display:flex;gap:10px}
+.m-btn{flex:1;padding:14px;border-radius:14px;font-size:13px;font-weight:700;text-align:center;cursor:pointer;letter-spacing:-0.2px}
+.m-btn.cancel{background:var(--bg2);color:var(--t2)}
+.m-btn.confirm{background:var(--g);color:#fff;box-shadow:0 4px 14px rgba(45,184,122,0.35)}
+.m-btn.skip{background:#fff;color:var(--t2);border:1.5px solid var(--bd)}
+
+/* Score Upload */
+.su-steps{display:flex;justify-content:center;gap:6px;padding:16px 20px 4px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--bd)}
+.step-dot.on{background:var(--g);width:24px;border-radius:4px}
+.step-dot.done{background:var(--g)}
+
+.photo-area{margin:10px 16px;aspect-ratio:4/3;background:#222;border-radius:18px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;position:relative;overflow:hidden}
+.photo-area::before{content:'';position:absolute;inset:20px;border:2px dashed rgba(255,255,255,0.3);border-radius:12px}
+.photo-icon{font-size:38px;margin-bottom:10px;position:relative;z-index:2}
+.photo-label{font-size:13px;font-weight:600;position:relative;z-index:2}
+.photo-sub{font-size:11px;color:rgba(255,255,255,0.55);margin-top:4px;position:relative;z-index:2}
+
+.capture-btn{margin:14px auto 0;width:72px;height:72px;border-radius:50%;background:#fff;border:4px solid var(--bd);display:block;cursor:pointer;position:relative}
+.capture-btn::after{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--g)}
+
+.photo-actions{display:flex;justify-content:space-around;padding:14px 20px}
+.pa{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.pa-ic{width:42px;height:42px;border-radius:12px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--t2)}
+.pa-label{font-size:11px;color:var(--t2);font-weight:500}
+
+/* OCR result */
+.ocr-preview{margin:10px 16px;background:var(--bg2);border-radius:14px;padding:10px;display:flex;gap:10px;align-items:center}
+.ocr-img{width:60px;height:60px;border-radius:8px;background:#ddd;flex-shrink:0}
+.ocr-info{flex:1}
+.ocr-title{font-size:12px;font-weight:700;color:var(--t1)}
+.ocr-status{font-size:10px;color:var(--g);margin-top:2px;font-weight:500}
+
+.score-table{margin:10px 16px;background:#fff;border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.st-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+.st-total-label{font-size:11px;color:var(--t3)}
+.st-total{font-size:24px;font-weight:700;color:var(--t1);letter-spacing:-0.5px}
+.st-over{font-size:13px;color:var(--pk);font-weight:600;margin-left:6px}
+.st-course{font-size:11px;color:var(--t2);font-weight:500}
+.st-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;font-size:10px;text-align:center}
+.st-h{color:var(--t3);font-weight:500;padding:3px 0}
+.st-s{background:var(--bg2);padding:4px 0;border-radius:5px;font-weight:600;color:var(--t1)}
+.st-s.over{background:var(--pks);color:var(--pk)}
+
+.post-card{margin:10px 16px;background:var(--card);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.pc-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:8px}
+.pc-input{width:100%;border:1.5px solid var(--bd);border-radius:10px;padding:10px;font-size:12px;color:var(--t1);min-height:60px;font-family:inherit;outline:none;resize:none}
+.pc-input:focus{border-color:var(--g)}
+.pc-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.priv-chips{display:flex;gap:4px}
+.pv{font-size:10px;padding:4px 8px;border-radius:8px;background:var(--bg2);color:var(--t2);cursor:pointer;font-weight:500}
+.pv.on{background:var(--gs);color:var(--g)}
+.pc-reward{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gold);font-weight:700}
+
+.submit-btn{margin:14px 16px 0;background:var(--g);color:#fff;padding:15px;border-radius:14px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(45,184,122,0.3)}
+
+/* Posted success */
+.posted{padding:50px 20px 20px;text-align:center}
+.posted-icon-wrap{position:relative;display:inline-block;margin-bottom:18px}
+.posted-icon{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--gd));display:flex;align-items:center;justify-content:center;font-size:46px;color:#fff;box-shadow:0 10px 40px rgba(45,184,122,0.35)}
+.posted-ring{position:absolute;inset:-12px;border-radius:50%;border:3px solid var(--g);opacity:0.25;animation:ring 2.4s ease-in-out infinite}
+@keyframes ring{0%{transform:scale(0.8);opacity:0.5}100%{transform:scale(1.3);opacity:0}}
+.posted-title{font-size:24px;font-weight:700;color:var(--t1);letter-spacing:-0.5px;margin-bottom:4px}
+.posted-sub{font-size:12px;color:var(--t2);margin-bottom:20px}
+
+.reward-big{margin:0 16px 14px;background:linear-gradient(135deg,#FFF8E8,#FFF2D6);border-radius:18px;padding:20px;border:1px dashed var(--gold);display:flex;align-items:center;gap:14px}
+.rb-icon{font-size:32px}
+.rb-body{flex:1}
+.rb-title{font-size:12px;font-weight:600;color:var(--t2)}
+.rb-detail{font-size:10px;color:var(--t3);margin-top:2px}
+.rb-pts{font-size:24px;font-weight:700;color:var(--gold);letter-spacing:-0.5px}
+
+.share-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px 16px}
+.sh{background:var(--card);border-radius:14px;padding:14px 4px;text-align:center;cursor:pointer;box-shadow:var(--shadow)}
+.sh-ic{font-size:22px;margin-bottom:4px}
+.sh-l{font-size:10px;color:var(--t2);font-weight:500}
+
+/* Tab */
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px;z-index:4}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0}
+.ti{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3)}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:9px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g);font-weight:600}
+
+.mode-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.mode-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent}
+.mode-btn.active{background:var(--g);color:#fff}
+.back-link{position:fixed;top:12px;left:12px;z-index:100;background:#fff;border-radius:20px;padding:7px 14px;font-size:11px;font-weight:600;color:var(--t2);text-decoration:none;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+</style>
+</head>
+<body>
+
+<a class="back-link" href="index.html">← Back</a>
+<div class="mode-toggle"><button class="mode-btn active">Light</button><button class="mode-btn">Dark</button></div>
+
+<!-- ========== 1. Not checked in ========== -->
+<div>
+<div class="phone-label">① 未チェックイン</div>
+<div class="phone"><div class="screen">
+
+<div class="hdr">
+  <div class="htitle"><div class="ttl">⛳ Rounds</div></div>
+  <div class="gps-badge"><span class="gps-dot"></span>GPS ON</div>
+</div>
+<div class="cats">
+  <div class="cat on">⛳ ゴルフ場</div>
+  <div class="cat">🎯 練習場</div>
+  <div class="cat">🍽️ 飲食店</div>
+  <div class="cat">📍 履歴</div>
+</div>
+<div class="map-wrap">
+  <div class="map">
+    <div class="road h" style="top:30%"></div>
+    <div class="road v" style="left:55%"></div>
+    <div class="mk me" style="left:50%;top:58%"><div class="pin"></div></div>
+    <div class="mk partner" style="left:34%;top:32%"><div class="pin">⛳</div><div class="tail"></div><div class="label">霞ヶ関CC</div></div>
+    <div class="mk listed" style="left:72%;top:46%"><div class="pin">⛳</div><div class="tail"></div></div>
+    <div class="mk listed" style="left:26%;top:75%"><div class="pin">⛳</div><div class="tail"></div></div>
+  </div>
+  <div class="map-ctrls"><div class="mc">＋</div><div class="mc">－</div><div class="mc">📍</div></div>
+</div>
+
+<div class="sortbar"><div class="stt">近くのゴルフ場 (12)</div><div class="sort">距離順 ▾</div></div>
+<div class="legend">
+  <div class="lg"><div class="dot partner"></div>提携</div>
+  <div class="lg"><div class="dot listed"></div>登録</div>
+</div>
+
+<div class="sp">
+  <div class="sp-top">
+    <div class="sp-img"><span class="tag">提携</span></div>
+    <div class="sp-body">
+      <div class="sp-head"><div class="sp-name">霞ヶ関カンツリー倶楽部</div><div class="sp-badge partner">PARTNER</div></div>
+      <div class="sp-meta">埼玉県川越市 · 東コース 18H</div>
+      <div class="sp-chips"><span class="chip">⭐ 4.8</span><span class="chip">⛳ PAR72</span><span class="chip">💴 ¥15,000〜</span></div>
+    </div>
+  </div>
+  <div class="sp-foot">
+    <div class="sp-dist near"><span class="d">● 450m</span> 範囲内</div>
+    <div class="sp-actions">
+      <div class="sp-btn detail">詳細</div>
+      <div class="sp-btn checkin">📍 チェックイン</div>
+    </div>
+  </div>
+</div>
+
+<div class="sp">
+  <div class="sp-top">
+    <div class="sp-img"></div>
+    <div class="sp-body">
+      <div class="sp-head"><div class="sp-name">武蔵カントリークラブ</div></div>
+      <div class="sp-meta">埼玉県入間市 · 27H PAR108</div>
+      <div class="sp-chips"><span class="chip">⭐ 4.5</span><span class="chip">💴 ¥12,000〜</span></div>
+    </div>
+  </div>
+  <div class="sp-foot">
+    <div class="sp-dist"><span class="d">5.1km</span></div>
+    <div class="sp-actions"><div class="sp-btn detail">詳細</div><div class="sp-btn checkin off">範囲外</div></div>
+  </div>
+</div>
+
+<div class="tb">
+  <div class="tab"><div class="ti">🏠</div><div class="tt">Home</div></div>
+  <div class="tab on"><div class="ti">⛳</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">🎁</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">♥</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">👤</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+</div>
+
+<!-- ========== 2. Active Round (map kept) ========== -->
+<div>
+<div class="phone-label">② ラウンド中（マップ継続）</div>
+<div class="phone"><div class="screen">
+
+<div class="hdr" style="padding:54px 20px 4px">
+  <div class="htitle"><div class="ttl">⛳ Rounds</div></div>
+  <div class="gps-badge" style="background:var(--pks);color:var(--pk)"><span class="gps-dot" style="background:var(--pk)"></span>LIVE</div>
+</div>
+
+<div class="round-card">
+  <div class="rc-top">
+    <div class="rc-status"><span class="d"></span>チェックイン中</div>
+    <div class="rc-time">10:42〜</div>
+  </div>
+  <div class="rc-name">霞ヶ関カンツリー倶楽部</div>
+  <div class="rc-sub">東コース · 18H PAR72</div>
+  <div class="rc-stats">
+    <div class="rc-st"><div class="rc-sv">2:14</div><div class="rc-sl">経過</div></div>
+    <div class="rc-st"><div class="rc-sv gold">+80</div><div class="rc-sl">獲得pts</div></div>
+    <div class="rc-st"><div class="rc-sv">● 高精度</div><div class="rc-sl">GPS</div></div>
+  </div>
+  <div class="rc-actions">
+    <div class="rc-btn primary">📸 スコア投稿</div>
+    <div class="rc-btn end">⏹ チェックアウト</div>
+  </div>
+</div>
+
+<div class="map-wrap short">
+  <div class="map">
+    <div class="road h" style="top:35%"></div>
+    <div class="road v" style="left:55%"></div>
+    <div class="mk me" style="left:50%;top:55%"><div class="pin"></div></div>
+    <div class="mk active" style="left:45%;top:40%"><div class="pin">⛳</div><div class="tail"></div><div class="label">いまココ</div></div>
+    <div class="mk listed" style="left:72%;top:72%"><div class="pin">🍽️</div><div class="tail" style="background:var(--or)"></div></div>
+  </div>
+  <div class="map-ctrls"><div class="mc">📍</div></div>
+</div>
+
+<div class="sortbar"><div class="stt">ラウンド後の飲食店 (8)</div><div class="sort">近い順 ▾</div></div>
+
+<div class="sp">
+  <div class="sp-top">
+    <div class="sp-img food"></div>
+    <div class="sp-body">
+      <div class="sp-head"><div class="sp-name">焼肉 GREEN</div><div class="sp-badge partner">PARTNER</div></div>
+      <div class="sp-meta">焼肉 · ゴルファー10%OFF</div>
+      <div class="sp-chips"><span class="chip">⭐ 4.6</span><span class="chip">🎁 10%OFF</span></div>
+    </div>
+  </div>
+  <div class="sp-foot">
+    <div class="sp-dist"><span class="d">1.2km</span></div>
+    <div class="sp-actions"><div class="sp-btn food">詳細</div></div>
+  </div>
+</div>
+
+<div class="tb">
+  <div class="tab"><div class="ti">🏠</div><div class="tt">Home</div></div>
+  <div class="tab on"><div class="ti">⛳</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">🎁</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">♥</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">👤</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+</div>
+
+<!-- ========== 3. Checkout modal ========== -->
+<div>
+<div class="phone-label">③ チェックアウト確認</div>
+<div class="phone"><div class="screen">
+
+<!-- Background shows state 2 dimmed -->
+<div class="hdr" style="padding:54px 20px 4px">
+  <div class="htitle"><div class="ttl">⛳ Rounds</div></div>
+  <div class="gps-badge" style="background:var(--pks);color:var(--pk)"><span class="gps-dot" style="background:var(--pk)"></span>LIVE</div>
+</div>
+<div class="round-card">
+  <div class="rc-top"><div class="rc-status"><span class="d"></span>チェックイン中</div><div class="rc-time">10:42〜</div></div>
+  <div class="rc-name">霞ヶ関CC</div>
+  <div class="rc-sub">東コース · 18H</div>
+</div>
+
+<div class="bg-dim"></div>
+
+<div class="modal">
+  <div class="m-icon-wrap"><div class="m-icon">⏹</div></div>
+  <div class="m-title">ラウンドを終わる</div>
+  <div class="m-sub">スコアを投稿しますか？</div>
+
+  <div class="summary-card">
+    <div class="summ-head">本日のラウンド</div>
+    <div class="summ-stats">
+      <div class="summ-st"><div class="summ-sv">2:42</div><div class="summ-sl">プレー時間</div></div>
+      <div class="summ-st"><div class="summ-sv green">450m</div><div class="summ-sl">GPS距離</div></div>
+      <div class="summ-st"><div class="summ-sv gold">+80</div><div class="summ-sl">取得pts</div></div>
+    </div>
+  </div>
+
+  <div class="summary-card" style="background:var(--golds);border:1px dashed var(--gold);display:flex;gap:12px;align-items:center">
+    <div style="font-size:26px">📸</div>
+    <div style="flex:1">
+      <div style="font-size:12px;font-weight:700;color:var(--t1)">スコア投稿で +50pts</div>
+      <div style="font-size:10px;color:var(--t2);margin-top:2px">GPS検証済みなので即投稿OK</div>
+    </div>
+  </div>
+
+  <div class="m-actions">
+    <div class="m-btn skip">投稿せず終了</div>
+    <div class="m-btn confirm">📸 投稿する</div>
+  </div>
+</div>
+
+<div class="tb">
+  <div class="tab"><div class="ti">🏠</div><div class="tt">Home</div></div>
+  <div class="tab on"><div class="ti">⛳</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">🎁</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">♥</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">👤</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+</div>
+
+<!-- ========== 4. Score Upload (GPS skipped) ========== -->
+<div>
+<div class="phone-label">④ スコア投稿（GPS検証済み）</div>
+<div class="phone"><div class="screen">
+
+<div class="hdr">
+  <div class="htitle"><div class="ttl">📸 スコア投稿</div></div>
+  <div class="gps-badge"><span class="gps-dot"></span>GPS ✓</div>
+</div>
+
+<div class="su-steps">
+  <div class="step-dot done"></div>
+  <div class="step-dot on"></div>
+  <div class="step-dot"></div>
+</div>
+
+<div class="ocr-preview">
+  <div class="ocr-img" style="background:linear-gradient(135deg,#d4d8e0,#a8b0bb)"></div>
+  <div class="ocr-info">
+    <div class="ocr-title">GDOスコアカード</div>
+    <div class="ocr-status">✓ AIが読み取り完了</div>
+  </div>
+  <div style="font-size:11px;color:var(--g);font-weight:600;background:var(--gs);padding:5px 10px;border-radius:10px">撮り直し</div>
+</div>
+
+<div class="score-table">
+  <div class="st-head">
+    <div>
+      <div class="st-total-label">合計スコア</div>
+      <div><span class="st-total">92</span><span class="st-over">(+20)</span></div>
+      <div class="st-course">霞ヶ関CC · 東コース</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:11px;color:var(--t3);margin-bottom:4px">検証済み</div>
+      <div style="font-size:10px;color:var(--g);font-weight:600;background:var(--gs);padding:4px 10px;border-radius:10px">✓ GPS</div>
+    </div>
+  </div>
+  <div class="st-grid">
+    <div class="st-h">H1</div><div class="st-h">H2</div><div class="st-h">H3</div><div class="st-h">H4</div><div class="st-h">H5</div><div class="st-h">H6</div><div class="st-h">H7</div><div class="st-h">H8</div><div class="st-h">H9</div>
+    <div class="st-s">5</div><div class="st-s over">6</div><div class="st-s">4</div><div class="st-s">3</div><div class="st-s over">5</div><div class="st-s">4</div><div class="st-s">5</div><div class="st-s">4</div><div class="st-s over">5</div>
+  </div>
+</div>
+
+<div class="post-card">
+  <div class="pc-title">ひとこと（任意）</div>
+  <textarea class="pc-input" placeholder="今日のラウンドは...">9番でバーディーが出た！あと15切り目標！</textarea>
+  <div class="pc-row">
+    <div class="priv-chips">
+      <div class="pv on">🌐 公開</div>
+      <div class="pv">👥 友達</div>
+      <div class="pv">🔒 自分のみ</div>
+    </div>
+    <div class="pc-reward">🎁 +50 pts</div>
+  </div>
+</div>
+
+<div class="submit-btn">投稿する</div>
+
+<div class="tb">
+  <div class="tab"><div class="ti">🏠</div><div class="tt">Home</div></div>
+  <div class="tab on"><div class="ti">⛳</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">🎁</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">♥</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">👤</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+</div>
+
+<!-- ========== 5. Posted ========== -->
+<div>
+<div class="phone-label">⑤ 投稿完了</div>
+<div class="phone"><div class="screen">
+
+<div class="posted">
+  <div class="posted-icon-wrap">
+    <div class="posted-ring"></div>
+    <div class="posted-icon">✓</div>
+  </div>
+  <div class="posted-title">投稿完了！</div>
+  <div class="posted-sub">ラウンドを終了しました</div>
+</div>
+
+<div class="reward-big">
+  <div class="rb-icon">🏆</div>
+  <div class="rb-body">
+    <div class="rb-title">本日の獲得ポイント</div>
+    <div class="rb-detail">チェックイン +30 · スコア投稿 +50 · バッジ +50</div>
+  </div>
+  <div class="rb-pts">+130</div>
+</div>
+
+<div style="padding:10px 20px 0">
+  <div style="font-size:12px;color:var(--t3);margin-bottom:10px;font-weight:500">共有する</div>
+</div>
+<div class="share-grid">
+  <div class="sh"><div class="sh-ic">🐦</div><div class="sh-l">X</div></div>
+  <div class="sh"><div class="sh-ic">📷</div><div class="sh-l">Instagram</div></div>
+  <div class="sh"><div class="sh-ic">💬</div><div class="sh-l">LINE</div></div>
+  <div class="sh"><div class="sh-ic">🔗</div><div class="sh-l">コピー</div></div>
+</div>
+
+<div style="padding:14px 16px 0">
+  <div style="font-size:12px;color:var(--t3);margin-bottom:10px;font-weight:500">次のアクション</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:var(--card);border-radius:14px;padding:14px;box-shadow:var(--shadow);cursor:pointer">
+      <div style="font-size:20px;margin-bottom:4px">♥</div>
+      <div style="font-size:12px;font-weight:700;color:var(--t1)">Voteに出す</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:1px">次回予想でpts</div>
+    </div>
+    <div style="background:var(--card);border-radius:14px;padding:14px;box-shadow:var(--shadow);cursor:pointer">
+      <div style="font-size:20px;margin-bottom:4px">🍽️</div>
+      <div style="font-size:12px;font-weight:700;color:var(--t1)">食事を予約</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:1px">焼肉GREEN 10%OFF</div>
+    </div>
+  </div>
+</div>
+
+<div class="tb">
+  <div class="tab"><div class="ti">🏠</div><div class="tt">Home</div></div>
+  <div class="tab on"><div class="ti">⛳</div><div class="tt">Rounds</div></div>
+  <div class="tab"><div class="ti">🎁</div><div class="tt">Gift</div></div>
+  <div class="tab"><div class="ti">♥</div><div class="tt">Vote</div></div>
+  <div class="tab"><div class="ti">👤</div><div class="tt">Profile</div></div>
+</div>
+</div></div>
+</div>
+
+</body>
+</html>
