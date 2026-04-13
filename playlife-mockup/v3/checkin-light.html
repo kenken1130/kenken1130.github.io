@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#f0f0f0;display:flex;justify-content:center;gap:24px;padding:20px;flex-wrap:wrap;min-height:100vh}
+.phone{width:390px;height:844px;background:#fff;border-radius:44px;border:3px solid #e0e0e0;overflow:hidden;position:relative;flex-shrink:0;box-shadow:0 20px 60px rgba(0,0,0,0.12)}
+.phone-label{color:#999;font-size:11px;text-align:center;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.screen{height:100%;overflow-y:auto;scrollbar-width:none;padding-bottom:80px;position:relative}
+.screen::-webkit-scrollbar{display:none}
+
+:root{
+  --bg:#ffffff;--bg2:#f7f7f5;
+  --card:#ffffff;
+  --shadow:rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.08) 0px 4px 12px;
+  --g:#2DB87A;--gd:#1a8a55;--gs:#E8F5EE;
+  --gold:#D4A853;--golds:#FFF8E8;
+  --pk:#E86B8A;--pks:#FFF0F3;
+  --bl:#5B9EF4;--bls:#EEF4FF;
+  --or:#F29B4F;--ors:#FFF1E6;
+  --t1:#222222;--t2:#6a6a6a;--t3:#999999;
+  --bd:rgba(0,0,0,0.08);
+}
+
+/* Map background (used in screen1 backdrop) */
+.bg-dim{position:absolute;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(2px);z-index:5}
+.bg-map{position:absolute;inset:0;background:#e5ecd6;
+  background-image:
+    linear-gradient(135deg,#d9e6c5 0%,#e5ecd6 45%,#eef1d8 100%),
+    radial-gradient(circle at 30% 40%,#c5daa0 0,transparent 50%);
+  background-blend-mode:multiply;opacity:0.6}
+.bg-map::before{content:'';position:absolute;inset:0;background-image:
+  linear-gradient(#c5c5c540 1px,transparent 1px),
+  linear-gradient(90deg,#c5c5c540 1px,transparent 1px);
+  background-size:44px 44px;opacity:0.35}
+
+/* ========== MODAL ========== */
+.modal{position:absolute;left:16px;right:16px;top:50%;transform:translateY(-50%);background:#fff;border-radius:24px;padding:28px 24px 20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);z-index:10}
+.m-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:var(--bg2);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px}
+.m-icon-wrap{display:flex;justify-content:center;margin-bottom:14px}
+.m-icon{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--gs),#c5eddb);display:flex;align-items:center;justify-content:center;font-size:30px;position:relative}
+.m-icon::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px dashed var(--g);opacity:0.45;animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.m-title{font-size:18px;font-weight:700;color:var(--t1);text-align:center;letter-spacing:-0.3px;margin-bottom:4px}
+.m-sub{font-size:12px;color:var(--t3);text-align:center;margin-bottom:18px}
+
+.venue-card{background:var(--bg2);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.vc-img{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#c5daa0,#8fb36e);flex-shrink:0}
+.vc-body{flex:1;min-width:0}
+.vc-name{font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-0.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vc-meta{font-size:11px;color:var(--t3);margin-top:2px}
+.vc-badge{font-size:9px;font-weight:600;color:var(--g);background:var(--gs);padding:3px 8px;border-radius:10px;margin-top:4px;display:inline-block}
+
+.gps-row{display:flex;justify-content:space-between;align-items:center;padding:10px 2px 14px}
+.gps-label{font-size:11px;color:var(--t3)}
+.gps-val{font-size:11px;color:var(--g);font-weight:600;display:flex;align-items:center;gap:4px}
+.gps-val .dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+
+.reward-preview{background:linear-gradient(135deg,var(--golds),#fff5d6);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:18px;border:1px dashed var(--gold)}
+.rp-icon{font-size:22px}
+.rp-body{flex:1}
+.rp-title{font-size:12px;font-weight:600;color:var(--t1)}
+.rp-sub{font-size:10px;color:var(--t2);margin-top:1px}
+.rp-pts{font-size:17px;font-weight:700;color:var(--gold);letter-spacing:-0.3px}
+
+.m-actions{display:flex;gap:10px}
+.m-btn{flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:700;text-align:center;cursor:pointer;transition:all .2s;letter-spacing:-0.2px}
+.m-btn.cancel{background:var(--bg2);color:var(--t2)}
+.m-btn.confirm{background:var(--g);color:#fff;box-shadow:0 4px 14px rgba(45,184,122,0.35)}
+.m-btn.confirm:hover{background:var(--gd)}
+
+/* ========== SUCCESS SCREEN ========== */
+.succ{padding:40px 20px 20px;text-align:center}
+.succ-icon-wrap{position:relative;display:inline-block;margin-bottom:20px}
+.succ-icon{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--g),var(--gd));display:flex;align-items:center;justify-content:center;font-size:46px;color:#fff;box-shadow:0 10px 40px rgba(45,184,122,0.35)}
+.succ-ring{position:absolute;inset:-12px;border-radius:50%;border:3px solid var(--g);opacity:0.25;animation:ring 2.4s ease-in-out infinite}
+.succ-ring.r2{animation-delay:0.6s}
+@keyframes ring{0%{transform:scale(0.8);opacity:0.5}100%{transform:scale(1.3);opacity:0}}
+.succ-title{font-size:26px;font-weight:700;color:var(--t1);letter-spacing:-0.5px;margin-bottom:6px}
+.succ-sub{font-size:13px;color:var(--t2);margin-bottom:22px}
+
+.succ-card{margin:0 6px 16px;background:linear-gradient(135deg,#1e8a55,#0f5a35);border-radius:20px;padding:20px;color:#fff;position:relative;overflow:hidden;text-align:left}
+.succ-card::after{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.08)}
+.succ-card-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.succ-av{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:22px}
+.succ-c-name{font-size:16px;font-weight:700;letter-spacing:-0.2px}
+.succ-c-sub{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px}
+.succ-c-badge{display:inline-block;font-size:9px;font-weight:600;background:rgba(255,255,255,0.2);padding:3px 8px;border-radius:10px;margin-top:4px;letter-spacing:0.5px}
+.succ-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.succ-st{background:rgba(255,255,255,0.1);border-radius:12px;padding:10px 6px;text-align:center}
+.succ-sv{font-size:18px;font-weight:700;letter-spacing:-0.3px}
+.succ-sv.gold{color:#EBC57A}
+.succ-sl{font-size:9px;color:rgba(255,255,255,0.55);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+
+.next-actions{padding:0 16px;margin-bottom:10px}
+.na-title{font-size:12px;color:var(--t3);margin-bottom:10px;font-weight:500;padding:0 4px}
+.na-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.na{background:var(--card);border-radius:14px;padding:14px 12px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px}
+.na:hover{transform:translateY(-2px)}
+.na-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.na-ic.gb{background:var(--gs);color:var(--g)}
+.na-ic.bb{background:var(--bls);color:var(--bl)}
+.na-ic.pb{background:var(--pks);color:var(--pk)}
+.na-ic.gdb{background:var(--golds);color:var(--gold)}
+.na-text{flex:1}
+.na-t{font-size:12px;font-weight:700;color:var(--t1)}
+.na-s{font-size:10px;color:var(--t3);margin-top:1px}
+
+.sh{display:flex;justify-content:space-between;align-items:center;padding:18px 20px 8px}
+.stt{font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-0.2px}
+.stl{font-size:11px;color:var(--g);cursor:pointer;font-weight:500}
+
+/* Friend row */
+.frow{padding:0 16px 4px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.frow::-webkit-scrollbar{display:none}
+.fi{flex-shrink:0;width:64px;text-align:center;cursor:pointer}
+.fi-av{width:50px;height:50px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.12)}
+.fi-av.pk{background:linear-gradient(135deg,#E86B8A,#c74b6a)}
+.fi-av.bl{background:linear-gradient(135deg,#5B9EF4,#3b7ed4)}
+.fi-av.g{background:linear-gradient(135deg,var(--g),var(--gd))}
+.fi-av.gd{background:linear-gradient(135deg,#D4A853,#b48833)}
+.fi-name{font-size:10px;color:var(--t2);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ========== ACTIVE ROUND ========== */
+.active-top{background:linear-gradient(135deg,var(--g),var(--gd));color:#fff;padding:60px 20px 60px;position:relative;overflow:hidden}
+.active-top::after{content:'';position:absolute;top:-80px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.07)}
+.at-status{font-size:10px;font-weight:600;letter-spacing:1.5px;background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:10px}
+.at-course{font-size:24px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px;position:relative;z-index:2}
+.at-sub{font-size:12px;color:rgba(255,255,255,0.75);margin-bottom:18px;position:relative;z-index:2}
+.at-timer{font-size:32px;font-weight:700;letter-spacing:-1px;position:relative;z-index:2}
+.at-timer-sub{font-size:10px;color:rgba(255,255,255,0.55);letter-spacing:1px;text-transform:uppercase;margin-top:-2px;position:relative;z-index:2}
+
+.hole-card{margin:-36px 16px 0;background:#fff;border-radius:18px;padding:16px;box-shadow:var(--shadow);position:relative;z-index:3}
+.hc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.hc-title{font-size:13px;font-weight:600;color:var(--t2)}
+.hc-flag{background:var(--gs);color:var(--g);padding:3px 9px;border-radius:10px;font-size:10px;font-weight:600}
+.hc-main{display:flex;align-items:center;justify-content:space-between}
+.hc-hole{font-size:36px;font-weight:700;color:var(--t1);letter-spacing:-1px;line-height:1}
+.hc-hole-sub{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.hc-divider{width:1px;height:50px;background:var(--bd);margin:0 16px}
+.hc-score{text-align:right}
+.hc-sv{font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-0.5px}
+.hc-sv.ov{color:var(--pk)}
+.hc-sl{font-size:10px;color:var(--t3);margin-top:2px}
+.hc-progress{margin-top:14px;height:4px;background:var(--bg2);border-radius:2px;overflow:hidden}
+.hc-fill{height:100%;background:linear-gradient(90deg,var(--g),var(--gd));border-radius:2px}
+
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 16px}
+.act{background:var(--card);border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.act:hover{transform:translateY(-2px)}
+.ai{width:36px;height:36px;border-radius:11px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.ai.gb{background:var(--gs);color:var(--g)}
+.ai.bb{background:var(--bls);color:var(--bl)}
+.ai.pb{background:var(--pks);color:var(--pk)}
+.ai.gdb{background:var(--golds);color:var(--gold)}
+.al{font-size:10px;color:var(--t2);font-weight:500}
+
+.stream{margin:6px 16px;background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow)}
+.sm-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sm-live{background:var(--pk);color:#fff;padding:2px 8px;border-radius:8px;font-size:9px;font-weight:700;letter-spacing:0.5px}
+.sm-title{flex:1;font-size:12px;font-weight:600;color:var(--t1)}
+.sm-viewers{font-size:10px;color:var(--t3)}
+.sm-feed{display:flex;flex-direction:column;gap:6px;max-height:110px;overflow-y:auto;scrollbar-width:none}
+.sm-feed::-webkit-scrollbar{display:none}
+.sm-row{display:flex;align-items:center;gap:8px;font-size:11px}
+.sm-av{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0}
+.sm-name{font-weight:600;color:var(--t1)}
+.sm-msg{color:var(--t2)}
+.sm-gift{color:var(--pk);font-weight:600}
+
+.end-btn{margin:14px 16px 0;background:#fff;border:2px solid var(--pk);color:var(--pk);border-radius:14px;padding:14px;text-align:center;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.end-btn:hover{background:var(--pks)}
+
+/* Tab Bar */
+.tb{position:absolute;bottom:0;left:0;right:0;height:76px;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:flex-start;padding-top:8px;z-index:4}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0}
+.ti{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3);transition:all .2s}
+.tab.on .ti{background:var(--g);color:#fff}
+.tt{font-size:9px;color:var(--t3);font-weight:500}
+.tab.on .tt{color:var(--g);font-weight:600}
+
+/* Mode toggle */
+.mode-toggle{position:fixed;top:12px;right:12px;z-index:100;display:flex;background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.mode-btn{padding:7px 14px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .2s}
+.mode-btn.active{background:var(--g);color:#fff}
+.back-link{position:fixed;top:12px;left:12px;z-index:100;background:#fff;border-radius:20px;padding:7px 14px;font-size:11px;font-weight:600;color:var(--t2);text-decoration:none;border:1px solid rgba(0,0,0,0.1);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+</style>
+</head>
+<body>
+
+<a class="back-link" href="rounds-light.html">← Rounds</a>
+<div class="mode-toggle"><button class="mode-btn active">Light</button><button class="mode-btn">Dark</button></div>
+
+<!-- ========== 1. CONFIRM MODAL ========== -->
+<div>
+<div class="phone-label">① チェックイン確認モーダル</div>
+<div class="phone">
+<div class="screen">
+  <div class="bg-map"></div>
+  <div class="bg-dim"></div>
+
+  <div class="modal">
+    <div class="m-close">✕</div>
+    <div class="m-icon-wrap"><div class="m-icon">📍</div></div>
+    <div class="m-title">ここでチェックイン？</div>
+    <div class="m-sub">GPSで位置を証明します</div>
+
+    <div class="venue-card">
+      <div class="vc-img"></div>
+      <div class="vc-body">
+        <div class="vc-name">霞ヶ関カンツリー倶楽部</div>
+        <div class="vc-meta">埼玉県川越市 · 東コース 18H</div>
+        <div class="vc-badge">⛳ PARTNER</div>
+      </div>
+    </div>
+
+    <div class="gps-row">
+      <div class="gps-label">📡 GPS精度</div>
+      <div class="gps-val"><span class="dot"></span>高精度 (±8m)</div>
+    </div>
+    <div class="gps-row" style="margin-top:-10px">
+      <div class="gps-label">📍 距離</div>
+      <div class="gps-val">450m（範囲内）</div>
+    </div>
+
+    <div class="reward-preview">
+      <div class="rp-icon">🏆</div>
+      <div class="rp-body">
+        <div class="rp-title">チェックインボーナス</div>
+        <div class="rp-sub">初回ボーナス +30pts 込み</div>
+      </div>
+      <div class="rp-pts">+80 pts</div>
+    </div>
+
+    <div class="m-actions">
+      <div class="m-btn cancel">キャンセル</div>
+      <div class="m-btn confirm">📍 チェックイン</div>
+    </div>
+  </div>
+
+  <div class="tb">
+    <div class="tab"><div class="ti">🏠</div><div class="tt">Home</div></div>
+    <div class="tab on"><div class="ti">⛳</div><div class="tt">Rounds</div></div>
+    <div class="tab"><div class="ti">🎁</div><div class="tt">Gift</div></div>
+    <div class="tab"><div class="ti">♥</div><div class="tt">Vote</div></div>
+    <div class="tab"><div class="ti">👤</div><div class="tt">Profile</div></div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ========== 2. SUCCESS SCREEN ========== -->
+<div>
+<div class="phone-label">② チェックイン完了</div>
+<div class="phone">
+<div class="screen">
+
+  <div class="succ">
+    <div class="succ-icon-wrap">
+      <div class="succ-ring"></div>
+      <div class="succ-ring r2"></div>
+      <div class="succ-icon">✓</div>
+    </div>
+    <div class="succ-title">チェックイン完了！</div>
+    <div class="succ-sub">霞ヶ関カンツリー倶楽部 · 10:42</div>
+  </div>
+
+  <div class="succ-card">
+    <div class="succ-card-top">
+      <div class="succ-av">⛳</div>
+      <div>
+        <div class="succ-c-name">霞ヶ関カンツリー倶楽部</div>
+        <div class="succ-c-sub">東コース 18H · PAR72</div>
+        <div class="succ-c-badge">⭐ PARTNER — 10% OFF</div>
+      </div>
+    </div>
+    <div class="succ-stats">
+      <div class="succ-st"><div class="succ-sv gold">+80</div><div class="succ-sl">取得pts</div></div>
+      <div class="succ-st"><div class="succ-sv">450m</div><div class="succ-sl">GPS距離</div></div>
+      <div class="succ-st"><div class="succ-sv">12回目</div><div class="succ-sl">来場回数</div></div>
+    </div>
+  </div>
+
+  <div class="next-actions">
+    <div class="na-title">次に進む</div>
+    <div class="na-grid">
+      <div class="na"><div class="na-ic gb">⛳</div><div class="na-text"><div class="na-t">ラウンド開始</div><div class="na-s">スコア記録</div></div></div>
+      <div class="na"><div class="na-ic bb">📸</div><div class="na-text"><div class="na-t">スコア投稿</div><div class="na-s">AIが認識</div></div></div>
+      <div class="na"><div class="na-ic pb">♥</div><div class="na-text"><div class="na-t">Voteに出す</div><div class="na-s">みんなに予想</div></div></div>
+      <div class="na"><div class="na-ic gdb">📷</div><div class="na-text"><div class="na-t">写真を投稿</div><div class="na-s">フィードに共有</div></div></div>
+    </div>
+  </div>
+
+  <div class="sh"><div class="stt">ここにいるフレンド (4)</div><div class="stl">すべて ›</div></div>
+  <div class="frow">
+    <div class="fi"><div class="fi-av pk">Y</div><div class="fi-name">Yui</div></div>
+    <div class="fi"><div class="fi-av bl">T</div><div class="fi-name">Taro</div></div>
+    <div class="fi"><div class="fi-av gd">A</div><div class="fi-name">Aiko</div></div>
+    <div class="fi"><div class="fi-av g">R</div><div class="fi-name">Rina</div></div>
+  </div>
+
+  <div class="tb">
+    <div class="tab"><div class="ti">🏠</div><div class="tt">Home</div></div>
+    <div class="tab on"><div class="ti">⛳</div><div class="tt">Rounds</div></div>
+    <div class="tab"><div class="ti">🎁</div><div class="tt">Gift</div></div>
+    <div class="tab"><div class="ti">♥</div><div class="tt">Vote</div></div>
+    <div class="tab"><div class="ti">👤</div><div class="tt">Profile</div></div>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ========== 3. ACTIVE ROUND ========== -->
+<div>
+<div class="phone-label">③ ラウンド中（チェックイン継続）</div>
+<div class="phone">
+<div class="screen">
+
+  <div class="active-top">
+    <div class="at-status">● LIVE — ラウンド中</div>
+    <div class="at-course">霞ヶ関CC</div>
+    <div class="at-sub">東コース 18H · PAR72 · 10:42 スタート</div>
+    <div class="at-timer">2:14:38</div>
+    <div class="at-timer-sub">経過時間</div>
+  </div>
+
+  <div class="hole-card">
+    <div class="hc-top">
+      <div class="hc-title">現在のホール</div>
+      <div class="hc-flag">⛳ プレイ中</div>
+    </div>
+    <div class="hc-main">
+      <div>
+        <div class="hc-hole">9</div>
+        <div class="hc-hole-sub">/ 18H</div>
+      </div>
+      <div class="hc-divider"></div>
+      <div class="hc-score">
+        <div class="hc-sv ov">+5</div>
+        <div class="hc-sl">現在スコア</div>
+      </div>
+    </div>
+    <div class="hc-progress"><div class="hc-fill" style="width:50%"></div></div>
+  </div>
+
+  <div class="acts">
+    <div class="act"><div class="ai gb">📝</div><div class="al">スコア記録</div></div>
+    <div class="act"><div class="ai bb">📸</div><div class="al">写真</div></div>
+    <div class="act"><div class="ai pb">🎯</div><div class="al">距離計測</div></div>
+    <div class="act"><div class="ai gdb">🏌️</div><div class="al">ホール情報</div></div>
+  </div>
+
+  <div class="stream">
+    <div class="sm-top">
+      <div class="sm-live">● LIVE</div>
+      <div class="sm-title">ラウンドを応援中</div>
+      <div class="sm-viewers">👀 24</div>
+    </div>
+    <div class="sm-feed">
+      <div class="sm-row"><div class="sm-av" style="background:linear-gradient(135deg,#E86B8A,#c74b6a)">Y</div><div><span class="sm-name">Yui</span> <span class="sm-msg">頑張って！90切り期待してる ⛳</span></div></div>
+      <div class="sm-row"><div class="sm-av" style="background:linear-gradient(135deg,#D4A853,#b48833)">A</div><div><span class="sm-name">Aiko</span> <span class="sm-gift">🎁 100 pts 送りました</span></div></div>
+      <div class="sm-row"><div class="sm-av" style="background:linear-gradient(135deg,#5B9EF4,#3b7ed4)">T</div><div><span class="sm-name">Taro</span> <span class="sm-msg">9番ホール難しいよね！</span></div></div>
+      <div class="sm-row"><div class="sm-av" style="background:linear-gradient(135deg,#2DB87A,#1a8a55)">R</div><div><span class="sm-name">Rina</span> <span class="sm-gift">🎁 50 pts 送りました</span></div></div>
+    </div>
+  </div>
+
+  <div class="end-btn">⏹ ラウンドを終了する</div>
+
+  <div class="tb">
+    <div class="tab"><div class="ti">🏠</div><div class="tt">Home</div></div>
+    <div class="tab on"><div class="ti">⛳</div><div class="tt">Rounds</div></div>
+    <div class="tab"><div class="ti">🎁</div><div class="tt">Gift</div></div>
+    <div class="tab"><div class="ti">♥</div><div class="tt">Vote</div></div>
+    <div class="tab"><div class="ti">👤</div><div class="tt">Profile</div></div>
+  </div>
+</div>
+</div>
+</div>
+
+</body>
+</html>
