@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GOLFIN 招待</title>
+  <meta property="og:title" content="GOLFIN に招待されました">
+  <meta property="og:description" content="スコア投稿でお互い100pts GET 🎁">
+  <meta property="og:image" content="https://kenken1130.github.io/playlife-mockup/golfin-logo.png">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+      background: linear-gradient(135deg, #2DB87A 0%, #1a8a55 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #fff;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 32px 24px;
+      text-align: center;
+      color: #333;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    }
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 16px;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 8px;
+      color: #222;
+    }
+    .sub {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .code-box {
+      background: #F5FAF7;
+      border: 1px solid rgba(45,184,122,0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .code-label { font-size: 12px; color: #666; margin-bottom: 4px; }
+    .code { font-size: 28px; font-weight: 700; letter-spacing: 3px; color: #2DB87A; }
+    .reward {
+      background: #FFF4C9;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 24px;
+      font-weight: 600;
+      color: #8a6a00;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 12px;
+      text-decoration: none;
+    }
+    .btn:active { opacity: 0.8; }
+    .btn.android { background: #2DB87A; }
+    .btn.web { background: #333; }
+    .note {
+      font-size: 11px;
+      color: #999;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <svg class="logo" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="48" fill="#2DB87A"/>
+      <text x="50" y="62" text-anchor="middle" font-size="44" font-weight="700" fill="#fff">G</text>
+    </svg>
+    <h1>GOLFIN に招待されました 🎁</h1>
+    <p class="sub">ゴルフスコア × GPS証明 × ソーシャル応援</p>
+
+    <div class="code-box">
+      <div class="code-label">招待コード</div>
+      <div class="code" id="code">—</div>
+    </div>
+
+    <div class="reward">
+      初回スコア投稿で お互い 100pts GET
+    </div>
+
+    <a class="btn" id="ios-btn" href="#">📱 App Store で開く (iOS)</a>
+    <a class="btn android" id="android-btn" href="#">🤖 Google Play で開く (Android)</a>
+    <a class="btn web" id="web-btn" href="#">🌐 ブラウザ版で試す</a>
+
+    <p class="note">
+      アプリをインストール後、初回起動時に招待コードが自動反映されます。
+    </p>
+  </div>
+
+  <script>
+    // Parse code from ?ref=CODE (primary) or trailing path segment (fallback)
+    const params = new URLSearchParams(window.location.search);
+    let code = params.get('ref') || '';
+    if (!code) {
+      const pathParts = window.location.pathname.split('/').filter(p => p);
+      if (pathParts.length > 1 && pathParts[pathParts.length - 2] === 'i') {
+        code = pathParts[pathParts.length - 1];
+      }
+    }
+    const codeUpper = code.toUpperCase();
+    document.getElementById('code').textContent = codeUpper || '—';
+
+    // Store code in sessionStorage + localStorage for Web app first launch
+    try {
+      localStorage.setItem('pending_invite_code', codeUpper);
+      sessionStorage.setItem('pending_invite_code', codeUpper);
+    } catch (e) {}
+
+    const APP_STORE_URL = 'https://apps.apple.com/app/golfin/id0000000000'; // TBD after App Store approval
+    const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.wonderwall.playlife';
+    const WEB_APP_URL = 'https://kenken1130.github.io/playlife-web/?ref=' + codeUpper;
+
+    document.getElementById('ios-btn').href = APP_STORE_URL;
+    document.getElementById('android-btn').href = PLAY_STORE_URL;
+    document.getElementById('web-btn').href = WEB_APP_URL;
+
+    // Auto-redirect on mobile (after 2s — give user a chance to see the code)
+    const ua = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+    const isAndroid = /android/.test(ua);
+
+    if (isIOS || isAndroid) {
+      // Show a subtle hint; don't auto-redirect immediately — let user tap consciously
+      document.querySelector(isIOS ? '#ios-btn' : '#android-btn').style.background = '#2DB87A';
+    }
+  </script>
+</body>
+</html>
