@@ -66,9 +66,8 @@
     }
     .hero::before {
       content: ''; position: absolute; inset: 0;
-      background-image: url('assets/gps_1.webp');
-      background-size: cover; background-position: center;
-      opacity: 0.18; filter: blur(2px);
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.12), transparent 60%),
+                  radial-gradient(circle at 80% 70%, rgba(255,255,255,0.08), transparent 50%);
     }
     .hero-inner {
       position: relative; z-index: 1;
@@ -106,10 +105,13 @@
       position: relative;
     }
     .hero-image img {
-      max-width: 320px; width: 100%;
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
-      transform: rotate(-2deg);
+      max-width: 280px; width: 100%;
+      border-radius: 28px;
+      filter: drop-shadow(0 24px 48px rgba(0,0,0,0.5));
+      transform: rotate(-3deg);
+      transition: transform 0.4s;
     }
+    .hero-image img:hover { transform: rotate(0deg) scale(1.02); }
     @media (max-width: 720px) {
       .hero-inner { grid-template-columns: 1fr; }
       .hero-image { order: -1; margin-bottom: 32px; }
@@ -163,7 +165,7 @@
     }
     .story-image::before {
       content: ''; position: absolute; inset: 0;
-      background: url('assets/gps_2.webp') center/cover; opacity: 0.3;
+      background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.2), transparent 60%);
     }
     .story-image-text {
       position: relative; color: #fff; font-size: 24px;
@@ -228,6 +230,32 @@
     .showcase-images img:nth-child(2) { transform: translateY(24px); }
     @media (max-width: 720px) {
       .showcase-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    /* === Gallery === */
+    .gallery {
+      background: var(--bg-soft);
+      overflow: hidden;
+    }
+    .gallery-track {
+      display: flex; gap: 16px; margin-top: 40px;
+      overflow-x: auto; padding-bottom: 16px;
+      scroll-snap-type: x mandatory;
+    }
+    .gallery-track::-webkit-scrollbar { height: 6px; }
+    .gallery-track::-webkit-scrollbar-thumb { background: var(--green); border-radius: 3px; }
+    .gallery-item {
+      flex: 0 0 auto; width: 220px;
+      scroll-snap-align: start;
+    }
+    .gallery-item img {
+      width: 100%; border-radius: 16px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+      border: 1px solid var(--border);
+    }
+    .gallery-item .caption {
+      text-align: center; font-size: 12px;
+      color: var(--text-mute); margin-top: 8px;
     }
 
     /* === Tournament === */
@@ -325,6 +353,7 @@
     <img src="assets/logo-h.png" alt="GOLFIN" class="nav-logo">
     <div class="nav-links">
       <a href="#features">機能</a>
+      <a href="#gallery-anchor">画面</a>
       <a href="#tournaments">トーナメント</a>
       <a href="#faq">FAQ</a>
       <a href="#signup" class="nav-cta">事前登録</a>
@@ -356,7 +385,7 @@
       </div>
     </div>
     <div class="hero-image">
-      <img src="assets/gps_3.webp" alt="GOLFIN App">
+      <img src="assets/gps_1.png" alt="GOLFIN ホーム画面">
     </div>
   </div>
 </section>
@@ -470,8 +499,8 @@
         </p>
       </div>
       <div class="showcase-images">
-        <img src="assets/gps_4.webp" alt="GPS Check-in">
-        <img src="assets/gps_5.webp" alt="GPS Score">
+        <img src="assets/gps_8.png" alt="スコアカード AI 認識">
+        <img src="assets/gps_5.png" alt="プロフィール Trust 80%">
       </div>
     </div>
   </div>
@@ -484,8 +513,8 @@
     <h2 class="section-title">本物のコースで、ゲームをプレイ。</h2>
     <div class="showcase-grid">
       <div class="showcase-images">
-        <img src="assets/game_3.webp" alt="GOLFIN Game Course View">
-        <img src="assets/game_1.webp" alt="GOLFIN Avatar">
+        <img src="assets/game_4.png" alt="GOLFIN Game ホーム">
+        <img src="assets/game_1.png" alt="GOLFIN Game リーダーボード">
       </div>
       <div class="showcase-text">
         <h3>アバター × 実コース × 対戦</h3>
@@ -503,6 +532,27 @@
           ※ Game Mode は v1.1.0 (2026年8月) 以降に段階リリース予定
         </p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section class="gallery" id="gallery-anchor">
+  <div class="container">
+    <div class="section-label">SCREENS</div>
+    <h2 class="section-title">アプリの全体像をプレビュー</h2>
+    <p class="section-lead">スコア管理・ソーシャル・トーナメント・アバター成長 — すべてが一つの体験に。</p>
+    <div class="gallery-track">
+      <div class="gallery-item"><img src="assets/gps_1.png" alt="ホーム"><p class="caption">ホーム / Live Votes</p></div>
+      <div class="gallery-item"><img src="assets/gps_8.png" alt="スコア登録"><p class="caption">スコア AI 認識</p></div>
+      <div class="gallery-item"><img src="assets/gps_5.png" alt="プロフィール"><p class="caption">プロフィール Trust 80%</p></div>
+      <div class="gallery-item"><img src="assets/gps_6.png" alt="アバター"><p class="caption">アバター成長</p></div>
+      <div class="gallery-item"><img src="assets/gps_7.png" alt="バッジ"><p class="caption">バッジコレクション</p></div>
+      <div class="gallery-item"><img src="assets/gps_2.png" alt="Vote"><p class="caption">Live Vote</p></div>
+      <div class="gallery-item"><img src="assets/gps_3.png" alt="Gift"><p class="caption">Gift エコノミー</p></div>
+      <div class="gallery-item"><img src="assets/gps_4.png" alt="Rounds"><p class="caption">Rounds マップ</p></div>
+      <div class="gallery-item"><img src="assets/gps_9.png" alt="Feed"><p class="caption">フィード</p></div>
+      <div class="gallery-item"><img src="assets/gps_10.png" alt="Settings"><p class="caption">設定 / Safety</p></div>
     </div>
   </div>
 </section>
