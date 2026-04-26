@@ -7,7 +7,7 @@
   <title>GOLFIN — ゴルフが、もっと面白くなる。</title>
   <meta property="og:title" content="GOLFIN — ゴルフが、もっと面白くなる。">
   <meta property="og:description" content="AIスコア認識 × GPS位置証明 × トーナメント。2026年7月30日リリース、事前登録受付中。">
-  <meta property="og:image" content="https://kenken1130.github.io/playlife-mockup/golfin/assets/logo-v.png">
+  <meta property="og:image" content="https://kenken1130.github.io/playlife-mockup/golfin/assets/gps_1.png">
   <meta property="og:type" content="website">
   <link rel="icon" type="image/png" href="assets/logo-v.png">
   <style>
@@ -279,6 +279,61 @@
       .tournament-grid { grid-template-columns: 1fr; }
     }
 
+    /* === Flow (5-step score post) === */
+    .flow {
+      background: linear-gradient(180deg, #fff 0%, var(--bg-soft) 100%);
+    }
+    .flow-track {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+      margin-top: 48px;
+    }
+    .flow-step { text-align: center; }
+    .flow-step .num {
+      display: inline-flex; width: 32px; height: 32px;
+      border-radius: 50%; background: var(--green); color: #fff;
+      align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px; margin-bottom: 12px;
+    }
+    .flow-step h4 {
+      font-size: 14px; font-weight: 700; margin-bottom: 8px;
+    }
+    .flow-step p { font-size: 12px; color: var(--text-mute); margin-bottom: 12px; }
+    .flow-step img {
+      width: 100%; max-width: 200px; border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      border: 1px solid var(--border);
+    }
+    @media (max-width: 720px) {
+      .flow-track {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+    }
+
+    /* === Profile Showcase === */
+    .profile-showcase {
+      background: linear-gradient(135deg, #f0f9f4 0%, #fff 100%);
+    }
+    .profile-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      margin-top: 48px;
+    }
+    .profile-card {
+      text-align: center;
+    }
+    .profile-card img {
+      width: 100%; max-width: 280px; border-radius: 18px;
+      box-shadow: 0 16px 32px rgba(45,184,122,0.15);
+      border: 1px solid var(--border);
+    }
+    .profile-card h4 {
+      font-size: 18px; font-weight: 800; margin-top: 16px;
+    }
+    .profile-card p { font-size: 13px; color: var(--text-mute); margin-top: 4px; }
+    @media (max-width: 720px) {
+      .profile-grid { grid-template-columns: 1fr; }
+    }
+
     /* === Founder Story === */
     .founder {
       background: linear-gradient(135deg, var(--bg-soft) 0%, #fff 100%);
@@ -371,13 +426,13 @@
         <span class="hero-badge">🎁 事前登録で 100pts</span>
       </div>
       <h1>
-        ゴルフが、<br>
-        <span class="accent">もっと面白くなる。</span>
+        動けば、<br>
+        <span class="accent">価値になる。</span>
       </h1>
       <p class="hero-sub">
-        スコアカードをかざすだけでAI認識。GPSで位置証明。<br>
-        誰かに見られている、応援されている、競い合える。<br>
-        ゴルフの新しい体験が、ここから始まります。
+        スコアカードをかざすだけでAI認識。GPSで位置を証明。<br>
+        ゴルフの一打一打が、Trust スコア・pts・コミュニティの声に変わる。<br>
+        ゴルフの新しい体験が、ここから始まる。
       </p>
       <div class="hero-cta">
         <a href="#signup" class="btn btn-primary">事前登録する →</a>
@@ -479,28 +534,76 @@
   </div>
 </section>
 
-<!-- Showcase: GPS -->
-<section class="showcase">
+<!-- 5-Step Score Flow -->
+<section class="flow">
   <div class="container">
-    <div class="section-label">PLAY GOLF · EARN POINTS</div>
-    <h2 class="section-title">ラウンドが、ポイントになる。</h2>
-    <div class="showcase-grid">
-      <div class="showcase-text">
-        <h3>チェックイン → プレー → チェックアウト</h3>
-        <p>
-          ゴルフ場に着いたらアプリでチェックイン。プレー終了後にスコアを入力してチェックアウト。
-          たったこれだけで、Trust スコアと pts が付与されます。
-        </p>
-        <p style="margin-top:16px;">
-          ⛳ 1ラウンドで最大 100 pts<br>
-          📍 GPS 位置証明で +30 pts<br>
-          🔥 連続GPSチェックで +20 pts<br>
-          🤖 AI認識でブースト +50 pts
-        </p>
+    <div class="section-label">SCORE POST FLOW</div>
+    <h2 class="section-title">スコア投稿は、5タップ完了。</h2>
+    <p class="section-lead">
+      撮る → AIが読む → 確認 → GPS証明 → 投稿。
+      慣れれば<strong>30秒</strong>でラウンド記録が完了します。
+    </p>
+
+    <div class="flow-track">
+      <div class="flow-step">
+        <div class="num">1</div>
+        <h4>📸 撮る</h4>
+        <p>スコアカードをかざす</p>
+        <img src="assets/gps_8.png" alt="撮影">
       </div>
-      <div class="showcase-images">
-        <img src="assets/gps_8.png" alt="スコアカード AI 認識">
-        <img src="assets/gps_5.png" alt="プロフィール Trust 80%">
+      <div class="flow-step">
+        <div class="num">2</div>
+        <h4>🤖 AI 認識</h4>
+        <p>OUT/IN/Putts 自動入力</p>
+        <img src="assets/gps_9.png" alt="AI認識">
+      </div>
+      <div class="flow-step">
+        <div class="num">3</div>
+        <h4>✏️ 確認</h4>
+        <p>必要ならホール毎修正</p>
+        <img src="assets/gps_10.png" alt="スコア修正">
+      </div>
+      <div class="flow-step">
+        <div class="num">4</div>
+        <h4>📍 GPS 証明</h4>
+        <p>ゴルフ場を自動検出</p>
+        <img src="assets/gps_11.png" alt="GPS証明">
+      </div>
+      <div class="flow-step">
+        <div class="num">5</div>
+        <h4>🎁 投稿完了</h4>
+        <p>+80 pts / Trust 80%</p>
+        <img src="assets/gps_12.png" alt="完了">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Profile Showcase -->
+<section class="profile-showcase">
+  <div class="container">
+    <div class="section-label">YOUR GOLFER PROFILE</div>
+    <h2 class="section-title">あなたのゴルファー人生を、可視化。</h2>
+    <p class="section-lead">
+      Trust スコア / アバターレベル / バッジコレクション。<br>
+      プレーするほど、あなただけのゴルファー像が育っていきます。
+    </p>
+
+    <div class="profile-grid">
+      <div class="profile-card">
+        <img src="assets/gps_4.png" alt="プロフィール統計">
+        <h4>📊 統計プロフィール</h4>
+        <p>Trust 80%・パワー・テクニック・メンタル</p>
+      </div>
+      <div class="profile-card">
+        <img src="assets/gps_6.png" alt="アバター成長">
+        <h4>🎮 アバター成長</h4>
+        <p>Lv.1 ビギナー → Lv.50 プロまで進化</p>
+      </div>
+      <div class="profile-card">
+        <img src="assets/gps_7.png" alt="バッジコレクション">
+        <h4>🏅 バッジコレクション</h4>
+        <p>24種のバッジ・連続記録・10コース制覇</p>
       </div>
     </div>
   </div>
@@ -543,16 +646,20 @@
     <h2 class="section-title">アプリの全体像をプレビュー</h2>
     <p class="section-lead">スコア管理・ソーシャル・トーナメント・アバター成長 — すべてが一つの体験に。</p>
     <div class="gallery-track">
-      <div class="gallery-item"><img src="assets/gps_1.png" alt="ホーム"><p class="caption">ホーム / Live Votes</p></div>
-      <div class="gallery-item"><img src="assets/gps_8.png" alt="スコア登録"><p class="caption">スコア AI 認識</p></div>
-      <div class="gallery-item"><img src="assets/gps_5.png" alt="プロフィール"><p class="caption">プロフィール Trust 80%</p></div>
-      <div class="gallery-item"><img src="assets/gps_6.png" alt="アバター"><p class="caption">アバター成長</p></div>
-      <div class="gallery-item"><img src="assets/gps_7.png" alt="バッジ"><p class="caption">バッジコレクション</p></div>
+      <div class="gallery-item"><img src="assets/gps_14.png" alt="スプラッシュ"><p class="caption">起動画面</p></div>
+      <div class="gallery-item"><img src="assets/gps_1.png" alt="ホーム"><p class="caption">ホーム (Maya)</p></div>
       <div class="gallery-item"><img src="assets/gps_2.png" alt="Vote"><p class="caption">Live Vote</p></div>
       <div class="gallery-item"><img src="assets/gps_3.png" alt="Gift"><p class="caption">Gift エコノミー</p></div>
-      <div class="gallery-item"><img src="assets/gps_4.png" alt="Rounds"><p class="caption">Rounds マップ</p></div>
-      <div class="gallery-item"><img src="assets/gps_9.png" alt="Feed"><p class="caption">フィード</p></div>
-      <div class="gallery-item"><img src="assets/gps_10.png" alt="Settings"><p class="caption">設定 / Safety</p></div>
+      <div class="gallery-item"><img src="assets/gps_4.png" alt="プロフィール"><p class="caption">プロフィール (Trust 80%)</p></div>
+      <div class="gallery-item"><img src="assets/gps_5.png" alt="プロフィール下部"><p class="caption">統計・最近のラウンド</p></div>
+      <div class="gallery-item"><img src="assets/gps_6.png" alt="アバター"><p class="caption">アバター成長</p></div>
+      <div class="gallery-item"><img src="assets/gps_7.png" alt="バッジ"><p class="caption">バッジコレクション</p></div>
+      <div class="gallery-item"><img src="assets/gps_8.png" alt="スコア撮影"><p class="caption">スコア登録①撮影</p></div>
+      <div class="gallery-item"><img src="assets/gps_9.png" alt="AI認識"><p class="caption">スコア登録②AI認識</p></div>
+      <div class="gallery-item"><img src="assets/gps_10.png" alt="スコア修正"><p class="caption">スコア登録③確認</p></div>
+      <div class="gallery-item"><img src="assets/gps_11.png" alt="GPS証明"><p class="caption">スコア登録④GPS証明</p></div>
+      <div class="gallery-item"><img src="assets/gps_12.png" alt="投稿確認"><p class="caption">スコア登録⑤確認</p></div>
+      <div class="gallery-item"><img src="assets/gps_13.png" alt="完了"><p class="caption">投稿完了・シェア</p></div>
     </div>
   </div>
 </section>
